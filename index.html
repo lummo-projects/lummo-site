@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lummo — Dream Tracker App | Track, Analyze & Understand Your Dreams</title>
+  <meta name="description" content="Lummo is a beautiful dream tracking app. Record your dreams, discover patterns, and gain insights into your sleep life. Available on iOS and Android.">
+  <meta name="keywords" content="dream tracker, dream journal, dream diary, sleep tracking, dream analysis, dream patterns, lucid dreaming, Lummo">
+  <meta name="author" content="Lummo">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Lummo — Dream Tracker App">
+  <meta property="og:description" content="Track, analyze & understand your dreams. Beautiful dream journal with smart insights.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lummo-projects.github.io/lummo-site/">
+  <meta property="og:image" content="https://lummo-projects.github.io/lummo-site/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lummo — Dream Tracker App">
+  <meta name="twitter:description" content="Track, analyze & understand your dreams.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #0a0a1a;
+      --bg-dark: #0d0d2b;
+      --bg-card: #13133a;
+      --bg-card-hover: #1a1a4a;
+      --purple-soft: #7c5cbf;
+      --purple-bright: #9b7dd4;
+      --purple-light: #c4a8ff;
+      --blue-soft: #4a6cf7;
+      --blue-glow: #6d8dff;
+      --indigo: #5b4dc9;
+      --pink-soft: #d4a5ff;
+      --text-primary: #e8e4f0;
+      --text-secondary: #a8a0bf;
+      --text-muted: #6b6580;
+      --gradient-hero: linear-gradient(135deg, #0a0a1a 0%, #1a1040 30%, #0d1a3a 70%, #0a0a1a 100%);
+      --gradient-card: linear-gradient(145deg, rgba(124,92,191,0.08), rgba(74,108,247,0.05));
+      --gradient-accent: linear-gradient(135deg, #7c5cbf, #4a6cf7);
+      --gradient-glow: linear-gradient(135deg, #9b7dd4, #6d8dff);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 4px 30px rgba(124,92,191,0.1);
+      --shadow-glow: 0 0 40px rgba(124,92,191,0.15);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* === NAVBAR === */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10,10,26,0.7);
+      border-bottom: 1px solid rgba(124,92,191,0.1);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.6rem 2rem;
+      background: rgba(10,10,26,0.92);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .nav-logo .moon { font-size: 1.6rem; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover { color: var(--purple-light); }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-cta {
+      background: var(--gradient-accent) !important;
+      color: white !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 600 !important;
+    }
+
+    .nav-cta::after { display: none !important; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh;
+      background: var(--gradient-hero);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(124,92,191,0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 30%, rgba(74,108,247,0.06) 0%, transparent 50%);
+      animation: heroGlow 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroGlow {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-3%, 2%) rotate(3deg); }
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      animation: twinkle var(--dur) ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.3); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text { max-width: 560px; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(124,92,191,0.15);
+      border: 1px solid rgba(124,92,191,0.25);
+      border-radius: 50px;
+      font-size: 0.82rem;
+      color: var(--purple-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--purple-light) 60%, var(--blue-glow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: white;
+      box-shadow: 0 4px 25px rgba(124,92,191,0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 35px rgba(124,92,191,0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(124,92,191,0.12);
+      color: var(--purple-light);
+      border: 1px solid rgba(124,92,191,0.25);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(124,92,191,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Phone Mockup */
+    .hero-phone {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .phone-mockup {
+      position: relative;
+      width: 280px;
+      height: 560px;
+      background: linear-gradient(160deg, #1a1040, #0d1a3a);
+      border-radius: 40px;
+      border: 3px solid rgba(124,92,191,0.3);
+      box-shadow: var(--shadow-glow),
+                  0 30px 60px rgba(0,0,0,0.4),
+                  inset 0 1px 0 rgba(255,255,255,0.05);
+      overflow: hidden;
+      animation: phoneFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes phoneFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 28px;
+      background: #0a0a1a;
+      border-radius: 0 0 18px 18px;
+      z-index: 5;
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 12px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #0f0f2e, #151540, #1a1050);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem 1rem;
+    }
+
+    .phone-screen .moon-icon {
+      font-size: 3rem;
+      animation: moonPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes moonPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(212,165,255,0.3)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 25px rgba(212,165,255,0.6)); }
+    }
+
+    .phone-screen .app-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .phone-screen .dream-card {
+      width: 100%;
+      background: rgba(124,92,191,0.1);
+      border: 1px solid rgba(124,92,191,0.2);
+      border-radius: 14px;
+      padding: 0.8rem;
+      text-align: left;
+    }
+
+    .dream-card .dream-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--purple-light);
+      margin-bottom: 0.3rem;
+    }
+
+    .dream-card .dream-text {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .dream-card .dream-tags {
+      display: flex;
+      gap: 0.3rem;
+      margin-top: 0.4rem;
+    }
+
+    .dream-card .tag {
+      font-size: 0.55rem;
+      padding: 0.15rem 0.5rem;
+      background: rgba(74,108,247,0.15);
+      color: var(--blue-glow);
+      border-radius: 50px;
+    }
+
+    /* === SECTIONS === */
+    section { padding: 6rem 2rem; }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--purple-bright);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 3.5rem;
+    }
+
+    .center { text-align: center; }
+    .center .section-subtitle { margin-left: auto; margin-right: auto; }
+
+    /* === FEATURES === */
+    #features {
+      background: linear-gradient(180deg, var(--bg-deep), var(--bg-dark));
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--gradient-card);
+      border: 1px solid rgba(124,92,191,0.1);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      border-color: rgba(124,92,191,0.25);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: rgba(124,92,191,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* === HOW IT WORKS === */
+    #how-it-works {
+      background: var(--bg-dark);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 42px;
+      left: calc(16.66% + 26px);
+      right: calc(16.66% + 26px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple-soft), var(--blue-soft));
+      opacity: 0.3;
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--gradient-accent);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(124,92,191,0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .step h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .step p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* === DOWNLOAD === */
+    #download {
+      background: linear-gradient(180deg, var(--bg-dark), var(--bg-deep));
+      text-align: center;
+    }
+
+    .download-buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem 2rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+
+    .store-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(124,92,191,0.3);
+      transform: translateY(-2px);
+    }
+
+    .store-btn svg { width: 28px; height: 28px; }
+
+    .store-btn .store-text {
+      text-align: left;
+      line-height: 1.2;
+    }
+
+    .store-btn .store-text small {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .store-btn .store-text span {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    /* === ABOUT === */
+    #about {
+      background: var(--bg-deep);
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-visual {
+      display: flex;
+      justify-content: center;
+    }
+
+    .about-orb {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(155,125,212,0.3), rgba(74,108,247,0.15), transparent 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      box-shadow: 0 0 80px rgba(124,92,191,0.15);
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.03); }
+    }
+
+    .about-text p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.2rem;
+    }
+
+    .about-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--purple-light);
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* === CONTACT === */
+    #contact {
+      background: linear-gradient(180deg, var(--bg-deep), var(--bg-dark));
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .contact-card {
+      background: var(--gradient-card);
+      border: 1px solid rgba(124,92,191,0.1);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .contact-card:hover {
+      border-color: rgba(124,92,191,0.25);
+      transform: translateY(-3px);
+    }
+
+    .contact-card .icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .contact-card a {
+      color: var(--purple-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .contact-card a:hover { color: var(--blue-glow); }
+
+    /* === FOOTER === */
+    footer {
+      background: var(--bg-dark);
+      border-top: 1px solid rgba(124,92,191,0.08);
+      padding: 3rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover { color: var(--purple-light); }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      width: 100%;
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(124,92,191,0.06);
+    }
+
+    /* === ANIMATIONS === */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .nav-links { 
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(10,10,26,0.97);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        z-index: 999;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .hamburger { display: flex; z-index: 1001; }
+
+      .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      .hamburger.active span:nth-child(2) { opacity: 0; }
+      .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+      }
+
+      .hero-text { max-width: 100%; }
+      .hero p { margin-left: auto; margin-right: auto; }
+      .hero-buttons { justify-content: center; }
+
+      .phone-mockup {
+        width: 220px;
+        height: 440px;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .steps::before { display: none; }
+
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .about-stats { justify-content: center; }
+
+      .about-visual { order: -1; }
+
+      .footer-inner { justify-content: center; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      section { padding: 4rem 1.2rem; }
+      .hero { padding: 6rem 1.2rem 3rem; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="moon">🌙</span>
+        <span>Lummo</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#download" class="nav-cta">Download</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="stars" id="stars"></div>
+    <div class="hero-content">
+      <div class="hero-text fade-in">
+        <div class="hero-badge">✨ Your personal dream journal</div>
+        <h1>Explore the World of Your Dreams</h1>
+        <p>Track, record, and understand your dreams with Lummo. Discover hidden patterns, build your dream diary, and unlock insights about your inner world.</p>
+        <div class="hero-buttons">
+          <a href="#download" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Get the App
+          </a>
+          <a href="#features" class="btn btn-secondary">Learn More</a>
+        </div>
+      </div>
+      <div class="hero-phone fade-in">
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="moon-icon">🌙</div>
+            <div class="app-title">Lummo</div>
+            <div class="dream-card">
+              <div class="dream-title">✨ Flying Over the Ocean</div>
+              <div class="dream-text">I was soaring above crystal-clear water, the wind felt warm and gentle...</div>
+              <div class="dream-tags">
+                <span class="tag">🌊 Water</span>
+                <span class="tag">✈️ Flying</span>
+                <span class="tag">😌 Calm</span>
+              </div>
+            </div>
+            <div class="dream-card">
+              <div class="dream-title">🏔️ Mountain Path</div>
+              <div class="dream-text">Walking along a misty trail, discovering hidden doors...</div>
+              <div class="dream-tags">
+                <span class="tag">🚪 Doors</span>
+                <span class="tag">🌫️ Mist</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-inner center">
+      <div class="section-label fade-in">✦ Features</div>
+      <h2 class="section-title fade-in">Everything You Need to<br>Understand Your Dreams</h2>
+      <p class="section-subtitle fade-in">Lummo gives you powerful yet gentle tools to capture, explore, and learn from your nightly journeys.</p>
+
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">📝</div>
+          <h3>Dream Journal</h3>
+          <p>Capture your dreams right after waking up with our quick, intuitive editor. Add emotions, clarity level, and vivid details.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">📊</div>
+          <h3>Sleep Analytics</h3>
+          <p>Visualize your dream frequency, sleep quality trends, and emotional patterns over time with beautiful charts.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🔮</div>
+          <h3>Pattern Discovery</h3>
+          <p>AI-powered analysis reveals recurring themes, symbols, and connections between your dreams you never noticed.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🏷️</div>
+          <h3>Smart Tags</h3>
+          <p>Organize dreams with tags, categories, and custom labels. Find any dream instantly with powerful search.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🌙</div>
+          <h3>Lucid Dreaming</h3>
+          <p>Track your lucid dream progress, set intentions before sleep, and build awareness with guided techniques.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🔒</div>
+          <h3>Private & Secure</h3>
+          <p>Your dreams are deeply personal. All data is encrypted and stored privately on your device. Your secrets are safe.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="section-inner center">
+      <div class="section-label fade-in">✦ How It Works</div>
+      <h2 class="section-title fade-in">Start in Three Simple Steps</h2>
+      <p class="section-subtitle fade-in">From download to your first dream insight — it only takes a few minutes.</p>
+
+      <div class="steps">
+        <div class="step fade-in">
+          <div class="step-number">1</div>
+          <h3>Download & Set Up</h3>
+          <p>Install Lummo from the App Store or Google Play. Set your wake-up reminder to capture dreams at the perfect moment.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-number">2</div>
+          <h3>Record Your Dreams</h3>
+          <p>When you wake up, open Lummo and jot down what you remember. Use voice input or type — whatever feels natural.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-number">3</div>
+          <h3>Discover Patterns</h3>
+          <p>As your journal grows, Lummo reveals insights about recurring themes, emotional trends, and your unique dream world.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="download">
+    <div class="section-inner center">
+      <div class="section-label fade-in">✦ Download</div>
+      <h2 class="section-title fade-in">Ready to Explore<br>Your Dreams?</h2>
+      <p class="section-subtitle fade-in">Download Lummo for free and start building your dream journal today.</p>
+
+      <div class="download-buttons fade-in">
+        <a href="#" class="store-btn" aria-label="Download on the App Store">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div class="store-text">
+            <small>Download on the</small>
+            <span>App Store</span>
+          </div>
+        </a>
+        <a href="#" class="store-btn" aria-label="Get it on Google Play">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+          <div class="store-text">
+            <small>Get it on</small>
+            <span>Google Play</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="about-content">
+        <div class="about-visual fade-in">
+          <div class="about-orb">🌌</div>
+        </div>
+        <div class="about-text fade-in">
+          <div class="section-label">✦ About Lummo</div>
+          <h2 class="section-title">Dreams Deserve to<br>Be Remembered</h2>
+          <p>We spend about a third of our lives sleeping, and much of that time is filled with vivid, meaningful dreams. Yet most of us forget 95% of our dreams within minutes of waking.</p>
+          <p>Lummo was created to change that. We believe that understanding your dreams leads to a deeper understanding of yourself — your hopes, fears, creativity, and subconscious mind.</p>
+          <p>Built with love and care, Lummo combines beautiful design with thoughtful features to make dream tracking a joy, not a chore.</p>
+          <div class="about-stats">
+            <div>
+              <div class="stat-number">100%</div>
+              <div class="stat-label">Private & Secure</div>
+            </div>
+            <div>
+              <div class="stat-number">∞</div>
+              <div class="stat-label">Dream Entries</div>
+            </div>
+            <div>
+              <div class="stat-number">Free</div>
+              <div class="stat-label">To Get Started</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner center">
+      <div class="section-label fade-in">✦ Support</div>
+      <h2 class="section-title fade-in">We're Here to Help</h2>
+      <p class="section-subtitle fade-in">Have questions, feedback, or just want to share a cool dream? We'd love to hear from you.</p>
+
+      <div class="contact-grid">
+        <div class="contact-card fade-in">
+          <div class="icon">📧</div>
+          <h3>Email Support</h3>
+          <p><a href="mailto:support@lummo.app">support@lummo.app</a></p>
+          <p>We respond within 24 hours</p>
+        </div>
+        <div class="contact-card fade-in">
+          <div class="icon">🐛</div>
+          <h3>Bug Reports</h3>
+          <p><a href="mailto:bugs@lummo.app">bugs@lummo.app</a></p>
+          <p>Help us make Lummo better</p>
+        </div>
+        <div class="contact-card fade-in">
+          <div class="icon">💡</div>
+          <h3>Feature Requests</h3>
+          <p><a href="mailto:ideas@lummo.app">ideas@lummo.app</a></p>
+          <p>Your ideas shape Lummo's future</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">🌙 Lummo</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="#contact">Contact</a>
+        <a href="#features">Features</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2025 Lummo. All rights reserved. Made with 💜 for dreamers everywhere.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Stars
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+      star.style.animationDelay = Math.random() * 3 + 's';
+      if (Math.random() > 0.7) {
+        star.style.width = '3px';
+        star.style.height = '3px';
+      }
+      starsContainer.appendChild(star);
+    }
+
+    // Navbar scroll
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
