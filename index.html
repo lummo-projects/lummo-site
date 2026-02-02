@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,45 +12,47 @@
 <meta name="theme-color" content="#0a0a1a">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23faf4e0'/><circle cx='62' cy='38' r='12' fill='%23ede4c0' opacity='.6'/><circle cx='40' cy='60' r='7' fill='%23ede4c0' opacity='.4'/></svg>">
+<script>document.documentElement.classList.remove('no-js')</script>
 
-<!-- Fonts -->
+<!-- Fonts: Articulat CF (local) -->
 <style>
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-Thin.woff2') format('woff2'); font-weight: 100; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-Normal.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-DemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Articulat CF'; src: url('/fonts/ArticulatCF-ExtraBold.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-DemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
 </style>
+<!-- Display serif for headings -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 
 <style>
-/* ============================================
-   RESET & VARIABLES
-   ============================================ */
+/* ==========================================================================
+   RESET & CUSTOM PROPERTIES
+   ========================================================================== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root {
-  --bg: #0a0a1a;
+  --bg:  #0a0a1a;
   --bg2: #0d0b24;
   --bg3: #12103a;
   --bg4: #1a0e2e;
   --bg5: #141230;
   --primary: #3C38FF;
-  --primary-glow: rgba(60, 56, 255, 0.15);
+  --primary-glow: rgba(60,56,255,.15);
   --sleep: #6366f1;
-  --sleep-moon: #faf4e0;
+  --moon: #faf4e0;
   --feeding: #B51DF6;
   --health: #FFBE02;
   --growth: #4CAF50;
   --ai: #38bdf8;
-  --text: #e2e8f0;
-  --text-muted: rgba(226, 232, 240, 0.55);
-  --text-dim: rgba(226, 232, 240, 0.3);
+  --text:      #e2e8f0;
+  --text-mid:  rgba(226,232,240,.65);
+  --text-muted:rgba(226,232,240,.45);
+  --text-dim:  rgba(226,232,240,.25);
   --serif: 'Cormorant Garamond', Georgia, serif;
-  --sans: 'Articulat CF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --sans:  'Articulat CF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ease-out: cubic-bezier(.25,.46,.45,.94);
 }
 html { scroll-behavior: smooth; }
 body {
@@ -64,1159 +66,738 @@ body {
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
 
-/* ============================================
-   STARS (Fixed Background)
-   ============================================ */
-.stars-container {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
+/* Prevent FOUC — GSAP removes this; fallback after 3s for no-JS */
+.anim { opacity: 0; transform: translateY(30px); }
+.no-js .anim { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   ATMOSPHERIC LAYERS (Fixed)
+   ========================================================================== */
+
+/* --- Stars --- */
+.stars-box {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
 }
 .stars-layer {
   position: absolute;
-  inset: -20% -5%;
-  width: 110%;
-  height: 140%;
+  inset: -30% -10%;
+  width: 120%; height: 160%;
 }
 .star {
-  position: absolute;
-  border-radius: 50%;
-  background: #fff;
+  position: absolute; border-radius: 50%; background: #fff;
 }
-.star--s { animation: twinkle var(--dur, 6s) ease-in-out var(--del, 0s) infinite; }
-.star--m { animation: twinkle-bright var(--dur, 5s) ease-in-out var(--del, 0s) infinite; }
+.star--s { animation: tw var(--d,6s) ease-in-out var(--dl,0s) infinite; }
+.star--m { animation: tw-b var(--d,5s) ease-in-out var(--dl,0s) infinite; }
 .star--l {
-  animation: twinkle-bright var(--dur, 4s) ease-in-out var(--del, 0s) infinite;
-  box-shadow: 0 0 6px 2px rgba(255,255,255,0.2);
+  animation: tw-b var(--d,4s) ease-in-out var(--dl,0s) infinite;
+  box-shadow: 0 0 6px 2px rgba(255,255,255,.25);
 }
-@keyframes twinkle {
-  0%, 100% { opacity: 0.08; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.1); }
+@keyframes tw   { 0%,100%{opacity:.06;transform:scale(1)} 50%{opacity:.55;transform:scale(1.15)} }
+@keyframes tw-b { 0%,100%{opacity:.12;transform:scale(1)} 50%{opacity:.85;transform:scale(1.35)} }
+
+/* --- Shooting Stars --- */
+.shooting-star {
+  position: fixed;
+  width: 120px; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.7) 50%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transform: rotate(-35deg);
+  animation: shoot var(--d,8s) var(--dl,2s) linear infinite;
 }
-@keyframes twinkle-bright {
-  0%, 100% { opacity: 0.15; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.3); }
+@keyframes shoot {
+  0%   { opacity:0; transform: rotate(-35deg) translateX(-150px); }
+  2%   { opacity:1; }
+  8%   { opacity:0; transform: rotate(-35deg) translateX(600px); }
+  100% { opacity:0; }
 }
 
-/* ============================================
-   CSS MOON
-   ============================================ */
-.moon-container {
-  position: relative;
-  z-index: 2;
-  will-change: transform;
+/* --- Nebula Glows --- */
+.nebula {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: .35;
 }
+.nebula--1 {
+  width: 800px; height: 500px;
+  top: -10%; left: -15%;
+  background: radial-gradient(ellipse, rgba(60,56,255,.08) 0%, transparent 70%);
+}
+.nebula--2 {
+  width: 600px; height: 600px;
+  top: 30%; right: -20%;
+  background: radial-gradient(ellipse, rgba(99,102,241,.06) 0%, transparent 70%);
+}
+.nebula--3 {
+  width: 700px; height: 400px;
+  bottom: 10%; left: 10%;
+  background: radial-gradient(ellipse, rgba(181,29,246,.04) 0%, transparent 70%);
+}
+
+/* --- Film Grain Overlay --- */
+.grain {
+  position: fixed; inset: 0; z-index: 999;
+  pointer-events: none;
+  opacity: .028;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ==========================================================================
+   CSS MOON
+   ========================================================================== */
+.moon-wrap { position: relative; z-index: 2; will-change: transform; }
 .moon {
-  width: 200px;
-  height: 200px;
+  width: 260px; height: 260px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 65% 25%, rgba(255,255,255,0.1) 0%, transparent 35%),
-    radial-gradient(circle at 35% 30%, #faf4e0 0%, #ede4c0 20%, #d4c994 45%, #bfb07a 70%, #a99860 100%);
+    radial-gradient(circle at 62% 22%, rgba(255,255,255,.12) 0%, transparent 30%),
+    radial-gradient(circle at 35% 32%, #faf4e0 0%, #ede4c0 18%, #d4c994 42%, #bfb07a 68%, #a99860 100%);
   box-shadow:
-    0 0 40px 10px rgba(250, 244, 224, 0.18),
-    0 0 80px 30px rgba(250, 244, 224, 0.1),
-    0 0 160px 60px rgba(250, 244, 224, 0.05),
-    0 0 350px 120px rgba(250, 244, 224, 0.02),
-    inset 0 0 30px rgba(0, 0, 0, 0.06);
+    0 0 50px 12px rgba(250,244,224,.2),
+    0 0 100px 40px rgba(250,244,224,.12),
+    0 0 200px 80px rgba(250,244,224,.06),
+    0 0 450px 150px rgba(250,244,224,.025),
+    inset 0 0 40px rgba(0,0,0,.07);
   position: relative;
-  animation: moon-float 8s ease-in-out infinite;
+  animation: moon-float 10s ease-in-out infinite;
 }
+/* Surface highlight (3D) */
 .moon::before {
-  content: '';
-  position: absolute;
-  width: 92%; height: 92%;
-  top: 4%; left: 4%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 28% 22%, rgba(255,255,255,0.18) 0%, transparent 45%);
+  content:''; position:absolute;
+  width:90%; height:90%; top:5%; left:5%;
+  border-radius:50%;
+  background: radial-gradient(circle at 26% 20%, rgba(255,255,255,.2) 0%, transparent 42%);
 }
+/* Terminator shadow */
 .moon::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: linear-gradient(110deg, transparent 42%, rgba(0,0,0,0.06) 52%, rgba(0,0,0,0.1) 62%, rgba(0,0,0,0.13) 100%);
+  content:''; position:absolute; inset:0; border-radius:50%;
+  background: linear-gradient(112deg, transparent 40%, rgba(0,0,0,.07) 52%, rgba(0,0,0,.12) 64%, rgba(0,0,0,.16) 100%);
 }
-.crater {
-  position: absolute;
-  border-radius: 50%;
-  z-index: 1;
-}
+.crater { position:absolute; border-radius:50%; z-index:1; }
 .crater--1 {
-  width: 32%; height: 32%;
-  top: 17%; left: 50%;
-  background: radial-gradient(circle, rgba(190,170,110,0.35) 0%, rgba(190,170,110,0.1) 50%, transparent 70%);
-  box-shadow: inset 1px 1px 4px rgba(0,0,0,0.05);
+  width:30%; height:30%; top:16%; left:50%;
+  background: radial-gradient(circle, rgba(190,170,110,.38) 0%, rgba(190,170,110,.1) 50%, transparent 72%);
+  box-shadow: inset 1px 2px 5px rgba(0,0,0,.06);
 }
 .crater--2 {
-  width: 20%; height: 20%;
-  top: 55%; left: 22%;
-  background: radial-gradient(circle, rgba(190,170,110,0.3) 0%, rgba(190,170,110,0.08) 50%, transparent 70%);
-  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.04);
+  width:20%; height:20%; top:54%; left:20%;
+  background: radial-gradient(circle, rgba(190,170,110,.32) 0%, rgba(190,170,110,.08) 55%, transparent 72%);
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,.04);
 }
-.crater--3 {
-  width: 14%; height: 14%;
-  top: 40%; left: 66%;
-  background: radial-gradient(circle, rgba(190,170,110,0.25) 0%, transparent 70%);
-}
-.crater--4 {
-  width: 10%; height: 10%;
-  top: 70%; left: 52%;
-  background: radial-gradient(circle, rgba(190,170,110,0.2) 0%, transparent 70%);
-}
-.crater--5 {
-  width: 8%; height: 8%;
-  top: 30%; left: 75%;
-  background: radial-gradient(circle, rgba(190,170,110,0.18) 0%, transparent 70%);
-}
+.crater--3 { width:14%; height:14%; top:40%; left:66%; background: radial-gradient(circle, rgba(190,170,110,.26) 0%, transparent 72%); }
+.crater--4 { width:10%; height:10%; top:70%; left:52%; background: radial-gradient(circle, rgba(190,170,110,.2)  0%, transparent 72%); }
+.crater--5 { width:8%;  height:8%;  top:28%; left:76%; background: radial-gradient(circle, rgba(190,170,110,.18) 0%, transparent 72%); }
+.crater--6 { width:6%;  height:6%;  top:78%; left:36%; background: radial-gradient(circle, rgba(190,170,110,.14) 0%, transparent 72%); }
+
 @keyframes moon-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  33% { transform: translateY(-12px) rotate(0.5deg); }
-  66% { transform: translateY(6px) rotate(-0.3deg); }
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-14px) rotate(.6deg); }
+  70% { transform: translateY(7px) rotate(-.4deg); }
 }
+.moon--sm { width:130px; height:130px; }
 
-/* Small moon for sleep section */
-.moon--small {
-  width: 120px;
-  height: 120px;
-}
-
-/* ============================================
+/* ==========================================================================
    NAVIGATION
-   ============================================ */
+   ========================================================================== */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 16px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(10, 10, 26, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(60, 56, 255, 0.08);
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:14px 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  background: rgba(10,10,26,.9);
+  backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+  border-bottom: 1px solid rgba(60,56,255,.06);
   transform: translateY(-100%);
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform .5s var(--ease-out);
   pointer-events: none;
 }
-nav.visible { transform: translateY(0); pointer-events: auto; }
-.nav-logo {
-  font-family: var(--sans);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: 0.06em;
-}
-.nav-links { display: flex; gap: 28px; list-style: none; }
-.nav-links a {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  transition: color 0.3s;
-}
-.nav-links a:hover { color: var(--text); }
+nav.vis { transform: translateY(0); pointer-events: auto; }
+.nav-logo { font-weight:600; font-size:1.15rem; letter-spacing:.06em; color:var(--text); }
+.nav-links { display:flex; gap:26px; list-style:none; }
+.nav-links a { color:var(--text-muted); font-size:.82rem; font-weight:400; transition:color .3s; }
+.nav-links a:hover { color:var(--text); }
 .nav-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 20px;
-  background: var(--primary);
-  color: #fff;
-  border-radius: 24px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
+  padding:8px 20px; background:var(--primary); color:#fff;
+  border-radius:22px; font-size:.82rem; font-weight:500;
+  border:none; cursor:pointer;
+  transition: all .3s ease;
 }
-.nav-cta:hover { background: #4a46ff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(60,56,255,0.3); }
+.nav-cta:hover { background:#4a46ff; transform:translateY(-1px); box-shadow:0 4px 20px rgba(60,56,255,.35); }
 
-/* ============================================
-   SECTIONS (Common)
-   ============================================ */
-.section {
-  position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 24px;
-  z-index: 1;
-  overflow: hidden;
+/* ==========================================================================
+   SECTIONS (shared)
+   ========================================================================== */
+.sc {
+  position:relative;
+  min-height:100vh; min-height:100dvh;
+  display:flex; align-items:center; justify-content:center;
+  padding:80px 24px;
+  z-index:1;
+  overflow:hidden;
 }
-.section-fade-top {
-  position: absolute;
-  top: -1px; left: 0; right: 0;
-  height: 180px;
-  pointer-events: none;
-  z-index: 2;
+/* Seamless gradient bleed: top & bottom of every section */
+.sc::before, .sc::after {
+  content:''; position:absolute; left:0; right:0;
+  height:200px; pointer-events:none; z-index:0;
 }
-.section-fade-bottom {
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 180px;
-  pointer-events: none;
-  z-index: 2;
-}
-.section-inner {
-  max-width: 1100px;
-  width: 100%;
-  position: relative;
-  z-index: 3;
-}
-.section-content-center {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto;
-}
-.section-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+.sc::before { top:-1px; background: linear-gradient(to bottom, var(--sc-top, var(--bg)), transparent); }
+.sc::after  { bottom:-1px; background: linear-gradient(to top, var(--sc-bot, var(--bg)), transparent); }
+
+.sc-inner { max-width:1100px; width:100%; position:relative; z-index:2; }
+.sc-center { text-align:center; max-width:720px; margin:0 auto; }
+.sc-split {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:center;
 }
 
-/* ============================================
+/* ==========================================================================
    TYPOGRAPHY
-   ============================================ */
-.display {
-  font-family: var(--serif);
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  font-weight: 300;
-  line-height: 1.15;
-  letter-spacing: 0.02em;
-  color: var(--text);
-}
+   ========================================================================== */
 .heading {
   font-family: var(--serif);
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-size: clamp(2rem,4.5vw,3.4rem);
   font-weight: 300;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  line-height: 1.18;
+  letter-spacing: .01em;
   color: var(--text);
 }
-.subheading {
-  font-family: var(--sans);
-  font-size: clamp(1rem, 2vw, 1.25rem);
+.body {
+  font-size: clamp(.95rem,1.5vw,1.1rem);
   font-weight: 300;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-.body-text {
-  font-family: var(--sans);
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  font-weight: 300;
-  color: var(--text-muted);
+  color: var(--text-mid);
   line-height: 1.85;
 }
 .label {
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--text-dim);
 }
 
-/* ============================================
+/* ==========================================================================
    HERO
-   ============================================ */
+   ========================================================================== */
 #hero {
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
-  flex-direction: column;
-  gap: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  --sc-bot: var(--bg2);
+  flex-direction:column; padding-top:0; padding-bottom:0;
 }
-.hero-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding-top: 12vh;
-  z-index: 3;
+.hero-clouds {
+  position:absolute; inset:0; overflow:hidden; z-index:1; pointer-events:none;
 }
-.hero-text {
-  margin-top: 40px;
+.cloud {
+  position:absolute; border-radius:50%;
+  background: rgba(255,255,255,.02); filter:blur(55px);
+}
+.cloud-1 { width:550px; height:85px; bottom:14%; animation: drift 85s linear infinite; }
+.cloud-2 { width:420px; height:65px; bottom:24%; animation: drift 110s linear infinite; animation-delay:-40s; }
+.cloud-3 { width:650px; height:50px; bottom:8%;  animation: drift 130s linear infinite; animation-delay:-70s; }
+@keyframes drift {
+  0%{transform:translateX(-700px)} 100%{transform:translateX(calc(100vw + 300px))}
+}
+
+.hero-body {
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; padding-top:10vh; z-index:3;
 }
 .hero-title {
   font-family: var(--serif);
-  font-size: clamp(2.4rem, 6vw, 4.2rem);
-  font-weight: 300;
-  line-height: 1.15;
-  color: var(--text);
-  letter-spacing: 0.02em;
+  font-size: clamp(2.4rem,6.5vw,4.6rem);
+  font-weight: 300; line-height:1.12;
+  color: var(--text); letter-spacing:.015em;
+  margin-top:40px;
 }
 .hero-title em {
-  font-style: normal;
-  color: var(--sleep-moon);
-  text-shadow: 0 0 40px rgba(250, 244, 224, 0.15);
+  font-style:normal;
+  color: var(--moon);
+  text-shadow: 0 0 50px rgba(250,244,224,.18);
 }
 .hero-sub {
-  margin-top: 20px;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 300;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
+  margin-top:18px;
+  font-size: clamp(1rem,2vw,1.2rem);
+  font-weight:300; color:var(--text-muted); letter-spacing:.02em;
 }
-.hero-badges {
-  display: flex;
-  gap: 16px;
-  margin-top: 32px;
-  flex-wrap: wrap;
-  justify-content: center;
+.hero-pills {
+  display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; justify-content:center;
 }
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--text-muted);
+.pill {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 14px; border-radius:20px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);
+  font-size:.78rem; font-weight:400; color:var(--text-muted);
 }
-.hero-badge svg { width: 14px; height: 14px; opacity: 0.7; }
-.hero-phone-wrap {
-  margin-top: 48px;
-  z-index: 3;
-  position: relative;
+.pill svg { width:13px; height:13px; opacity:.65; }
+.hero-phone-area {
+  margin-top:44px; z-index:3; position:relative;
+}
+/* Soft glow behind phone */
+.hero-phone-area::before {
+  content:''; position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width:340px; height:540px; border-radius:40px;
+  background: radial-gradient(ellipse, rgba(60,56,255,.08) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events:none;
 }
 
-/* Scroll Indicator */
-.scroll-indicator {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 4;
-  animation: gentle-bob 3s ease-in-out infinite;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 8px;
+.scroll-hint {
+  position:absolute; bottom:28px; left:50%;
+  transform:translateX(-50%); z-index:4;
+  animation: bob 3s ease-in-out infinite;
+  background:none; border:none; padding:10px; cursor:pointer;
 }
-.scroll-indicator svg {
-  width: 24px; height: 24px;
-  stroke: var(--text-dim);
-  stroke-width: 1.5;
-  fill: none;
-  transition: opacity 0.3s;
-}
-.scroll-indicator:hover svg { opacity: 0.8; }
-@keyframes gentle-bob {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
-}
+.scroll-hint svg { width:22px; height:22px; stroke:var(--text-dim); stroke-width:1.5; fill:none; }
+@keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(9px)} }
 
-/* ============================================
+/* ==========================================================================
    PHONE MOCKUP
-   ============================================ */
+   ========================================================================== */
 .phone {
-  width: 240px;
-  height: 490px;
-  border-radius: 36px;
-  border: 2px solid rgba(255,255,255,0.1);
-  background: linear-gradient(180deg, #0f0e1a 0%, #0a0918 100%);
-  position: relative;
-  overflow: hidden;
+  width:240px; height:490px;
+  border-radius:36px;
+  border:2px solid rgba(255,255,255,.1);
+  background: linear-gradient(180deg,#0f0e1a,#0a0918);
+  position:relative; overflow:hidden; flex-shrink:0;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04),
-    0 25px 80px rgba(0,0,0,0.5),
-    0 0 60px rgba(60,56,255,0.06);
-  flex-shrink: 0;
+    0 0 0 1px rgba(255,255,255,.03),
+    0 30px 80px rgba(0,0,0,.55),
+    0 0 80px rgba(60,56,255,.07);
 }
 .phone-notch {
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 90px; height: 24px;
-  background: #0a0918;
-  border-radius: 0 0 16px 16px;
-  z-index: 5;
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:88px; height:24px; background:#0a0918;
+  border-radius:0 0 14px 14px; z-index:5;
 }
 .phone-notch::after {
-  content: '';
-  position: absolute;
-  top: 8px; left: 50%;
-  transform: translateX(-50%);
-  width: 40px; height: 4px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 2px;
+  content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%);
+  width:38px; height:4px; background:rgba(255,255,255,.08); border-radius:2px;
 }
-.phone-screen {
-  padding: 36px 14px 14px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.ph-screen { padding:34px 14px 14px; height:100%; display:flex; flex-direction:column; }
+.ph-status {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 4px; margin-bottom:14px;
+  font-size:.58rem; font-weight:600; color:var(--text);
 }
-.phone-status {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 4px;
-  margin-bottom: 16px;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--text);
+.ph-status-r { display:flex; gap:4px; align-items:center; }
+.ph-status-r svg { width:11px; height:11px; fill:var(--text); opacity:.6; }
+.ph-hdr { padding:0 4px; margin-bottom:14px; }
+.ph-hdr h4 { font-size:1.05rem; font-weight:600; }
+.ph-hdr span { font-size:.62rem; color:var(--text-dim); }
+.ph-active {
+  display:flex; align-items:center; gap:10px;
+  padding:11px; border-radius:13px; margin-bottom:10px;
+  border:1px solid rgba(99,102,241,.2);
+  background:rgba(99,102,241,.06);
+  position:relative;
 }
-.phone-status-icons {
-  display: flex;
-  gap: 4px;
-  align-items: center;
+.ph-active-icon {
+  width:34px; height:34px; border-radius:9px;
+  background:rgba(99,102,241,.15);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
-.phone-status-icons svg { width: 12px; height: 12px; fill: var(--text); opacity: 0.7; }
-.phone-header {
-  padding: 0 4px;
-  margin-bottom: 16px;
+.ph-active-icon svg { width:16px; height:16px; fill:var(--moon); }
+.ph-active-info { flex:1; }
+.ph-active-lbl { display:block; font-size:.6rem; color:var(--text-muted); }
+.ph-active-time {
+  display:block; font-size:1rem; font-weight:600;
+  color:var(--text); font-variant-numeric:tabular-nums;
 }
-.phone-header h4 {
-  font-family: var(--sans);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text);
+.ph-active-stop {
+  padding:4px 10px; border-radius:7px;
+  border:1px solid rgba(99,102,241,.25);
+  background:rgba(99,102,241,.1); color:#a5b4fc;
+  font-size:.6rem; font-weight:500; cursor:pointer;
 }
-.phone-header span {
-  font-size: 0.65rem;
-  color: var(--text-dim);
-  font-weight: 400;
+.ph-events { flex:1; overflow:hidden; }
+.ph-ev {
+  display:flex; align-items:center; gap:9px;
+  padding:8px 4px;
+  border-bottom:1px solid rgba(255,255,255,.03);
 }
-.phone-active-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  position: relative;
-  overflow: hidden;
+.ph-ev-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.ph-ev-info { flex:1; }
+.ph-ev-type { display:block; font-size:.68rem; font-weight:500; color:var(--text); }
+.ph-ev-detail { display:block; font-size:.55rem; color:var(--text-dim); }
+.ph-ev-time { font-size:.52rem; color:var(--text-dim); flex-shrink:0; }
+.ph-tabs {
+  display:flex; justify-content:space-around;
+  padding:7px 0 3px;
+  border-top:1px solid rgba(255,255,255,.05);
+  margin-top:auto;
 }
-.phone-active-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  opacity: 0.12;
-}
-.sleep-card::before { background: var(--sleep); }
-.sleep-card {
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  background: rgba(99, 102, 241, 0.06);
-}
-.phone-card-icon {
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-.sleep-card .phone-card-icon {
-  background: rgba(99, 102, 241, 0.15);
-}
-.sleep-card .phone-card-icon svg { width: 18px; height: 18px; fill: var(--sleep-moon); }
-.phone-card-info { flex: 1; }
-.phone-card-label {
-  display: block;
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-.phone-card-timer {
-  display: block;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.phone-card-stop {
-  padding: 5px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(99, 102, 241, 0.25);
-  background: rgba(99, 102, 241, 0.1);
-  color: #a5b4fc;
-  font-size: 0.65rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-.phone-events { flex: 1; overflow: hidden; }
-.phone-event {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 4px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.phone-event-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.phone-event-info { flex: 1; }
-.phone-event-type {
-  display: block;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: var(--text);
-}
-.phone-event-detail {
-  display: block;
-  font-size: 0.58rem;
-  color: var(--text-dim);
-  font-weight: 400;
-}
-.phone-event-time {
-  font-size: 0.55rem;
-  color: var(--text-dim);
-  font-weight: 400;
-  flex-shrink: 0;
-}
-.phone-tab-bar {
-  display: flex;
-  justify-content: space-around;
-  padding: 8px 0 4px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  margin-top: auto;
-}
-.phone-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
-.phone-tab svg { width: 16px; height: 16px; fill: var(--text-dim); }
-.phone-tab span { font-size: 0.5rem; color: var(--text-dim); font-weight: 400; }
-.phone-tab.active svg { fill: var(--primary); }
-.phone-tab.active span { color: var(--primary); }
-.phone-fab {
-  position: absolute;
-  bottom: 56px; right: 14px;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(60,56,255,0.4);
-  z-index: 5;
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 300;
-  line-height: 1;
+.ph-tab { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.ph-tab svg { width:15px; height:15px; fill:var(--text-dim); }
+.ph-tab span { font-size:.48rem; color:var(--text-dim); }
+.ph-tab.on svg { fill:var(--primary); }
+.ph-tab.on span { color:var(--primary); }
+.ph-fab {
+  position:absolute; bottom:52px; right:14px;
+  width:36px; height:36px; border-radius:50%;
+  background:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 18px rgba(60,56,255,.4);
+  z-index:5; color:#fff; font-size:1.15rem; font-weight:300; line-height:1;
 }
 
-/* ============================================
-   PROBLEM SECTION
-   ============================================ */
+/* ==========================================================================
+   PROBLEM
+   ========================================================================== */
 #problem {
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg3) 100%);
+  background: var(--bg2);
+  --sc-top: var(--bg2); --sc-bot: var(--bg3);
 }
-.problem-number {
-  font-family: var(--serif);
-  font-size: clamp(5rem, 14vw, 10rem);
-  font-weight: 300;
-  color: var(--text);
-  line-height: 1;
-  opacity: 0.9;
+.prob-num {
+  font-family:var(--serif);
+  font-size:clamp(5.5rem,15vw,11rem);
+  font-weight:300; color:var(--text); line-height:.95; opacity:.9;
 }
-.problem-label {
-  font-family: var(--serif);
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  font-weight: 300;
-  color: var(--text);
-  margin-top: 8px;
-  opacity: 0.7;
+.prob-sub {
+  font-family:var(--serif);
+  font-size:clamp(1.4rem,3vw,2rem);
+  font-weight:300; color:var(--text); margin-top:6px; opacity:.65;
 }
-.problem-desc {
-  margin-top: 32px;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 300;
-  color: var(--text-muted);
-  line-height: 1.8;
+.prob-desc {
+  margin-top:28px;
+  font-size:clamp(1rem,2vw,1.15rem);
+  font-weight:300; color:var(--text-muted); line-height:1.8;
 }
-.problem-desc strong {
-  color: var(--text);
-  font-weight: 400;
-}
-.problem-punchline {
-  margin-top: 40px;
-  font-family: var(--serif);
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
-  font-weight: 400;
-  color: var(--sleep-moon);
-  text-shadow: 0 0 40px rgba(250, 244, 224, 0.1);
+.prob-desc strong { color:var(--text); font-weight:400; }
+.prob-punch {
+  margin-top:36px;
+  font-family:var(--serif);
+  font-size:clamp(1.3rem,3vw,1.9rem);
+  font-weight:400; color:var(--moon);
+  text-shadow:0 0 50px rgba(250,244,224,.1);
 }
 
-/* ============================================
-   SLEEP SECTION
-   ============================================ */
+/* ==========================================================================
+   SLEEP
+   ========================================================================== */
 #sleep {
   background: linear-gradient(180deg, var(--bg3) 0%, #0e0d2a 50%, var(--bg3) 100%);
+  --sc-top: var(--bg3); --sc-bot: var(--bg3);
 }
-.sleep-visual {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
+.sleep-vis {
+  display:flex; flex-direction:column; align-items:center; gap:20px;
 }
-.sleep-demo {
-  background: rgba(99, 102, 241, 0.05);
-  border: 1px solid rgba(99, 102, 241, 0.12);
-  border-radius: 20px;
-  padding: 28px 32px;
-  text-align: center;
-  backdrop-filter: blur(8px);
-  width: 100%;
-  max-width: 300px;
+.sleep-card {
+  background:rgba(99,102,241,.05);
+  border:1px solid rgba(99,102,241,.14);
+  border-radius:20px; padding:24px 28px;
+  text-align:center; backdrop-filter:blur(8px);
+  width:100%; max-width:280px;
 }
-.sleep-demo-timer {
-  font-size: 2.4rem;
-  font-weight: 300;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
+.sleep-timer {
+  font-size:2.2rem; font-weight:300; color:var(--text);
+  font-variant-numeric:tabular-nums; letter-spacing:.05em;
 }
-.sleep-demo-label {
-  font-size: 0.8rem;
-  color: rgba(163, 175, 255, 0.6);
-  margin-top: 4px;
-  font-weight: 400;
+.sleep-lbl { font-size:.78rem; color:rgba(163,175,255,.55); margin-top:3px; }
+.sleep-btn {
+  margin-top:14px; padding:9px 28px; border-radius:22px;
+  border:1px solid rgba(99,102,241,.3);
+  background:rgba(99,102,241,.12); color:#a5b4fc;
+  font-size:.82rem; font-weight:500; cursor:pointer;
+  transition:all .3s;
 }
-.sleep-demo-btn {
-  margin-top: 16px;
-  padding: 10px 32px;
-  border-radius: 24px;
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  background: rgba(99, 102, 241, 0.12);
-  color: #a5b4fc;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.sleep-demo-btn:hover {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: rgba(99, 102, 241, 0.5);
-}
-.sleep-section-label {
-  color: var(--sleep);
-}
+.sleep-btn:hover { background:rgba(99,102,241,.22); border-color:rgba(99,102,241,.5); }
 
-/* ============================================
-   FEEDING SECTION
-   ============================================ */
+/* ==========================================================================
+   FEEDING
+   ========================================================================== */
 #feeding {
-  background: linear-gradient(180deg, var(--bg3) 0%, var(--bg4) 100%);
+  background: linear-gradient(180deg, var(--bg3), var(--bg4));
+  --sc-top: var(--bg3); --sc-bot: var(--bg4);
 }
-.feeding-visual {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+.feed-vis { display:flex; flex-direction:column; align-items:center; gap:18px; }
+.feed-orb {
+  width:100px; height:100px; border-radius:50%;
+  background:radial-gradient(circle, rgba(181,29,246,.18) 0%, transparent 70%);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
 }
-.feeding-icon-wrap {
-  width: 100px; height: 100px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(181, 29, 246, 0.15) 0%, transparent 70%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+.feed-orb::after {
+  content:''; position:absolute; inset:-18px; border-radius:50%;
+  border:1px solid rgba(181,29,246,.1);
+  animation: ring-pulse 3.5s ease-in-out infinite;
 }
-.feeding-icon-wrap::after {
-  content: '';
-  position: absolute;
-  inset: -15px;
-  border-radius: 50%;
-  border: 1px solid rgba(181, 29, 246, 0.1);
-  animation: pulse-ring 3s ease-in-out infinite;
+@keyframes ring-pulse { 0%,100%{transform:scale(1);opacity:.5} 50%{transform:scale(1.18);opacity:0} }
+.feed-orb svg { width:38px; height:38px; fill:var(--feeding); opacity:.9; }
+.feed-chips { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.chip {
+  padding:10px 16px; border-radius:11px; text-align:center; min-width:82px;
+  background:rgba(181,29,246,.05);
+  border:1px solid rgba(181,29,246,.12);
 }
-@keyframes pulse-ring {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.15); opacity: 0; }
-}
-.feeding-icon-wrap svg {
-  width: 40px; height: 40px;
-  fill: var(--feeding);
-  opacity: 0.9;
-}
-.feeding-cards {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.feeding-card {
-  padding: 12px 18px;
-  background: rgba(181, 29, 246, 0.05);
-  border: 1px solid rgba(181, 29, 246, 0.12);
-  border-radius: 12px;
-  text-align: center;
-  min-width: 90px;
-}
-.feeding-card-value {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text);
-}
-.feeding-card-label {
-  font-size: 0.65rem;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-.feeding-section-label { color: var(--feeding); }
+.chip-val { font-size:1.05rem; font-weight:500; color:var(--text); }
+.chip-lbl { font-size:.6rem; color:var(--text-dim); margin-top:2px; }
 
-/* ============================================
-   HEALTH & GROWTH SECTION
-   ============================================ */
+/* ==========================================================================
+   HEALTH & GROWTH
+   ========================================================================== */
 #health {
-  background: linear-gradient(180deg, var(--bg4) 0%, var(--bg5) 100%);
+  background: linear-gradient(180deg, var(--bg4), var(--bg5));
+  --sc-top: var(--bg4); --sc-bot: var(--bg5);
 }
-.health-visual {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+.health-vis { display:flex; flex-direction:column; align-items:center; gap:22px; }
+.chart-box {
+  width:100%; max-width:340px;
+  background:rgba(255,190,2,.03);
+  border:1px solid rgba(255,190,2,.1);
+  border-radius:16px; padding:22px;
 }
-.growth-chart-wrap {
-  width: 100%;
-  max-width: 340px;
-  background: rgba(255, 190, 2, 0.03);
-  border: 1px solid rgba(255, 190, 2, 0.1);
-  border-radius: 16px;
-  padding: 24px;
+.chart-hdr {
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
 }
-.growth-chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-.growth-chart-title {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text);
-}
-.growth-chart-period {
-  font-size: 0.65rem;
-  color: var(--text-dim);
-}
-.growth-chart-svg {
-  width: 100%;
-  height: 120px;
-}
-.growth-chart-svg .grid-line {
-  stroke: rgba(255,255,255,0.04);
-  stroke-width: 0.5;
-}
-.growth-chart-svg .data-line {
-  fill: none;
-  stroke: var(--health);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.growth-chart-svg .data-area {
-  fill: url(#healthGradient);
-}
-.growth-chart-svg .data-dot {
-  fill: var(--health);
-}
-.health-stats {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.health-stat {
-  text-align: center;
-}
-.health-stat-value {
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: var(--text);
-}
-.health-stat-label {
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-.health-section-label { color: var(--health); }
+.chart-title { font-size:.78rem; font-weight:500; color:var(--text); }
+.chart-period { font-size:.62rem; color:var(--text-dim); }
+.chart-svg { width:100%; height:120px; }
+.chart-svg .gline { stroke:rgba(255,255,255,.04); stroke-width:.5; }
+.chart-svg .dline { fill:none; stroke:var(--health); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.chart-svg .darea { fill:url(#hGrad); }
+.chart-svg .ddot  { fill:var(--health); }
+.h-stats { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+.h-stat { text-align:center; }
+.h-stat-v { font-size:1.25rem; font-weight:500; color:var(--text); }
+.h-stat-l { font-size:.58rem; color:var(--text-dim); margin-top:1px; }
 
-/* ============================================
-   AI ADVISOR SECTION
-   ============================================ */
-#ai-advisor {
+/* ==========================================================================
+   AI ADVISOR
+   ========================================================================== */
+#ai {
   background: linear-gradient(180deg, var(--bg5) 0%, #0d1030 50%, var(--bg5) 100%);
+  --sc-top: var(--bg5); --sc-bot: var(--bg5);
 }
-.ai-visual {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
+.ai-vis { display:flex; flex-direction:column; align-items:center; gap:22px; }
 .ai-orb {
-  width: 140px; height: 140px;
-  border-radius: 50%;
+  width:150px; height:150px; border-radius:50%;
   background: radial-gradient(circle at 40% 40%,
-    rgba(56, 189, 248, 0.2) 0%,
-    rgba(60, 56, 255, 0.15) 40%,
-    rgba(139, 92, 246, 0.08) 70%,
-    transparent 100%);
-  position: relative;
-  animation: ai-pulse 4s ease-in-out infinite;
+    rgba(56,189,248,.22) 0%, rgba(60,56,255,.16) 40%,
+    rgba(139,92,246,.08) 70%, transparent 100%);
+  position:relative;
+  animation: ai-breathe 5s ease-in-out infinite;
 }
 .ai-orb::before {
-  content: '';
-  position: absolute;
-  inset: 20%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, transparent 70%);
-  box-shadow: 0 0 60px 20px rgba(56, 189, 248, 0.1);
+  content:''; position:absolute; inset:18%;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(56,189,248,.45) 0%, transparent 70%);
+  box-shadow:0 0 70px 24px rgba(56,189,248,.12);
 }
 .ai-orb::after {
-  content: '';
-  position: absolute;
-  inset: -30%;
-  border-radius: 50%;
-  border: 1px solid rgba(56, 189, 248, 0.06);
-  animation: ai-ring 6s ease-in-out infinite;
+  content:''; position:absolute; inset:-35%; border-radius:50%;
+  border:1px solid rgba(56,189,248,.06);
+  animation: ai-ring 7s ease-in-out infinite;
 }
-@keyframes ai-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-@keyframes ai-ring {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.12); opacity: 0.6; }
-}
+@keyframes ai-breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+@keyframes ai-ring    { 0%,100%{transform:scale(1);opacity:.25} 50%{transform:scale(1.14);opacity:.55} }
 .sparkle {
-  position: absolute;
-  width: 4px; height: 4px;
-  background: white;
+  position:absolute;
+  background:#fff;
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  animation: sparkle-anim var(--dur, 3s) ease-in-out var(--del, 0s) infinite;
-  opacity: 0;
+  animation: spark var(--d,3s) ease-in-out var(--dl,0s) infinite;
+  opacity:0;
 }
-@keyframes sparkle-anim {
-  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+@keyframes spark {
+  0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}
+  50%{opacity:1;transform:scale(1) rotate(180deg)}
 }
-.ai-chat-bubble {
-  background: rgba(56, 189, 248, 0.06);
-  border: 1px solid rgba(56, 189, 248, 0.12);
-  border-radius: 16px 16px 16px 4px;
-  padding: 14px 18px;
-  max-width: 280px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.6;
+.chat-q {
+  background:rgba(56,189,248,.06);
+  border:1px solid rgba(56,189,248,.14);
+  border-radius:16px 16px 16px 4px;
+  padding:13px 17px; max-width:270px;
+  font-size:.82rem; color:var(--text-mid); line-height:1.6;
 }
-.ai-chat-response {
-  background: rgba(60, 56, 255, 0.06);
-  border: 1px solid rgba(60, 56, 255, 0.12);
-  border-radius: 16px 16px 4px 16px;
-  padding: 14px 18px;
-  max-width: 280px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  align-self: flex-end;
+.chat-a {
+  background:rgba(60,56,255,.06);
+  border:1px solid rgba(60,56,255,.14);
+  border-radius:16px 16px 4px 16px;
+  padding:13px 17px; max-width:270px;
+  font-size:.82rem; color:var(--text-mid); line-height:1.6;
+  align-self:flex-end;
 }
-.ai-section-label { color: var(--ai); }
 
-/* ============================================
-   FEATURES GRID SECTION
-   ============================================ */
+/* ==========================================================================
+   FEATURES GRID
+   ========================================================================== */
 #features {
-  background: linear-gradient(180deg, var(--bg5) 0%, var(--bg3) 100%);
+  background: linear-gradient(180deg, var(--bg5), var(--bg3));
+  --sc-top: var(--bg5); --sc-bot: var(--bg3);
 }
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-top: 48px;
+.f-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:14px; margin-top:44px;
 }
-.feature-card {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 16px;
-  padding: 24px 20px;
-  text-align: center;
-  transition: all 0.4s ease;
+.f-card {
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:15px; padding:22px 18px; text-align:center;
+  transition:all .4s ease;
 }
-.feature-card:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.1);
-  transform: translateY(-4px);
+.f-card:hover {
+  background:rgba(255,255,255,.045);
+  border-color:rgba(255,255,255,.1);
+  transform:translateY(-3px);
 }
-.feature-card-icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 14px;
+.f-card-ico {
+  width:42px; height:42px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 12px;
 }
-.feature-card-icon svg { width: 22px; height: 22px; }
-.feature-card h4 {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.feature-card p {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  line-height: 1.5;
-  font-weight: 300;
-}
-.fc-diaper .feature-card-icon { background: rgba(76, 175, 80, 0.1); }
-.fc-diaper .feature-card-icon svg { fill: var(--growth); }
-.fc-activity .feature-card-icon { background: rgba(255, 152, 0, 0.1); }
-.fc-activity .feature-card-icon svg { fill: #ff9800; }
-.fc-milestone .feature-card-icon { background: rgba(233, 30, 99, 0.1); }
-.fc-milestone .feature-card-icon svg { fill: #e91e63; }
-.fc-pump .feature-card-icon { background: rgba(181, 29, 246, 0.1); }
-.fc-pump .feature-card-icon svg { fill: var(--feeding); }
-.fc-export .feature-card-icon { background: rgba(255, 190, 2, 0.1); }
-.fc-export .feature-card-icon svg { fill: var(--health); }
-.fc-sync .feature-card-icon { background: rgba(60, 56, 255, 0.1); }
-.fc-sync .feature-card-icon svg { fill: var(--primary); }
-.fc-widget .feature-card-icon { background: rgba(56, 189, 248, 0.1); }
-.fc-widget .feature-card-icon svg { fill: var(--ai); }
-.fc-remind .feature-card-icon { background: rgba(239, 68, 68, 0.1); }
-.fc-remind .feature-card-icon svg { fill: #ef4444; }
+.f-card-ico svg { width:20px; height:20px; }
+.f-card h4 { font-size:.85rem; font-weight:500; margin-bottom:5px; }
+.f-card p  { font-size:.72rem; color:var(--text-dim); line-height:1.5; font-weight:300; }
 
-/* ============================================
-   FREE + OFFLINE SECTION
-   ============================================ */
+/* Card accent colors */
+.fc-1 .f-card-ico { background:rgba(76,175,80,.1); }  .fc-1 .f-card-ico svg { fill:#4CAF50; }
+.fc-2 .f-card-ico { background:rgba(255,152,0,.1); }  .fc-2 .f-card-ico svg { fill:#ff9800; }
+.fc-3 .f-card-ico { background:rgba(233,30,99,.1); }   .fc-3 .f-card-ico svg { fill:#e91e63; }
+.fc-4 .f-card-ico { background:rgba(181,29,246,.1); }  .fc-4 .f-card-ico svg { fill:#B51DF6; }
+.fc-5 .f-card-ico { background:rgba(255,190,2,.1); }   .fc-5 .f-card-ico svg { fill:#FFBE02; }
+.fc-6 .f-card-ico { background:rgba(60,56,255,.1); }   .fc-6 .f-card-ico svg { fill:#3C38FF; }
+.fc-7 .f-card-ico { background:rgba(56,189,248,.1); }  .fc-7 .f-card-ico svg { fill:#38bdf8; }
+.fc-8 .f-card-ico { background:rgba(239,68,68,.1); }   .fc-8 .f-card-ico svg { fill:#ef4444; }
+
+/* ==========================================================================
+   FREE + OFFLINE
+   ========================================================================== */
 #free {
-  background: linear-gradient(180deg, var(--bg3) 0%, var(--bg2) 100%);
+  background: linear-gradient(180deg, var(--bg3), var(--bg2));
+  --sc-top: var(--bg3); --sc-bot: var(--bg2);
 }
-.free-pillars {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  margin-top: 56px;
+.free-cols {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:28px; margin-top:52px;
 }
-.free-pillar {
-  text-align: center;
-  padding: 40px 24px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.05);
-  transition: all 0.4s ease;
+.free-col {
+  text-align:center; padding:36px 22px; border-radius:20px;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.05);
+  transition:all .4s ease;
 }
-.free-pillar:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.1);
+.free-col:hover { background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.1); }
+.free-ico {
+  width:60px; height:60px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 18px;
 }
-.free-pillar-icon {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
+.free-ico svg { width:26px; height:26px; }
+.fi-1 .free-ico { background:rgba(76,175,80,.1); }  .fi-1 .free-ico svg { fill:#4CAF50; }
+.fi-2 .free-ico { background:rgba(60,56,255,.1); }   .fi-2 .free-ico svg { fill:#3C38FF; }
+.fi-3 .free-ico { background:rgba(255,190,2,.1); }   .fi-3 .free-ico svg { fill:#FFBE02; }
+.free-col h3 {
+  font-family:var(--serif); font-size:1.5rem; font-weight:300;
+  color:var(--text); margin-bottom:10px;
 }
-.free-pillar-icon svg { width: 28px; height: 28px; }
-.fp-free .free-pillar-icon { background: rgba(76, 175, 80, 0.1); }
-.fp-free .free-pillar-icon svg { fill: var(--growth); }
-.fp-offline .free-pillar-icon { background: rgba(60, 56, 255, 0.1); }
-.fp-offline .free-pillar-icon svg { fill: var(--primary); }
-.fp-private .free-pillar-icon { background: rgba(255, 190, 2, 0.1); }
-.fp-private .free-pillar-icon svg { fill: var(--health); }
-.free-pillar h3 {
-  font-family: var(--serif);
-  font-size: 1.6rem;
-  font-weight: 300;
-  color: var(--text);
-  margin-bottom: 12px;
-}
-.free-pillar p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-  font-weight: 300;
-}
+.free-col p { font-size:.88rem; color:var(--text-muted); line-height:1.7; font-weight:300; }
 
-/* ============================================
-   DOWNLOAD SECTION
-   ============================================ */
+/* ==========================================================================
+   DOWNLOAD
+   ========================================================================== */
 #download {
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--bg2), var(--bg));
+  --sc-top: var(--bg2);
 }
-.download-inner {
-  display: flex;
-  align-items: center;
-  gap: 72px;
+.dl-inner { display:flex; align-items:center; gap:70px; }
+.dl-text h2 {
+  font-family:var(--serif);
+  font-size:clamp(2rem,4.5vw,3.4rem);
+  font-weight:300; margin-bottom:14px;
 }
-.download-text h2 {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 300;
-  margin-bottom: 16px;
-  color: var(--text);
-}
-.download-text p {
-  font-weight: 300;
-  color: var(--text-muted);
-  margin-bottom: 32px;
-  line-height: 1.8;
-  font-size: 1rem;
-}
-.store-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+.dl-text p { font-weight:300; color:var(--text-muted); margin-bottom:28px; line-height:1.8; font-size:1rem; }
+.store-btns { display:flex; gap:12px; flex-wrap:wrap; }
 .store-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 24px;
-  border: 1px solid rgba(60, 56, 255, 0.2);
-  border-radius: 14px;
-  background: rgba(60, 56, 255, 0.06);
-  transition: all 0.35s ease;
-  cursor: pointer;
+  display:inline-flex; align-items:center; gap:11px;
+  padding:13px 22px;
+  border:1px solid rgba(60,56,255,.2);
+  border-radius:13px;
+  background:rgba(60,56,255,.06);
+  transition:all .35s ease; cursor:pointer;
 }
 .store-btn:hover {
-  background: rgba(60, 56, 255, 0.14);
-  border-color: rgba(60, 56, 255, 0.35);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(60, 56, 255, 0.15);
+  background:rgba(60,56,255,.14);
+  border-color:rgba(60,56,255,.35);
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(60,56,255,.15);
 }
-.store-btn svg { width: 22px; height: 22px; fill: var(--text); flex-shrink: 0; }
-.store-info { display: flex; flex-direction: column; }
-.store-info .soon {
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.store-info .name {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text);
-}
+.store-btn svg { width:20px; height:20px; fill:var(--text); flex-shrink:0; }
+.s-info { display:flex; flex-direction:column; }
+.s-info .soon { font-size:.58rem; color:var(--text-dim); letter-spacing:.04em; text-transform:uppercase; }
+.s-info .name { font-size:.92rem; font-weight:500; }
 
-/* ============================================
+/* ==========================================================================
    FOOTER
-   ============================================ */
+   ========================================================================== */
 footer {
-  padding: 48px 24px;
-  text-align: center;
-  background: var(--bg);
-  border-top: 1px solid rgba(255,255,255,0.03);
-  position: relative;
-  z-index: 1;
+  padding:44px 24px; text-align:center;
+  background:var(--bg);
+  border-top:1px solid rgba(255,255,255,.03);
+  position:relative; z-index:1;
 }
-.footer-links {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-.footer-links a {
-  color: var(--text-dim);
-  font-size: 0.8rem;
-  transition: color 0.3s;
-}
-.footer-links a:hover { color: var(--text-muted); }
-.footer-copy {
-  font-size: 0.7rem;
-  color: rgba(226, 232, 240, 0.12);
-}
+.ft-links { display:flex; gap:22px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+.ft-links a { color:var(--text-dim); font-size:.78rem; transition:color .3s; }
+.ft-links a:hover { color:var(--text-mid); }
+.ft-copy { font-size:.68rem; color:rgba(226,232,240,.1); }
 
-/* ============================================
-   CLOUDS (Atmospheric)
-   ============================================ */
-.clouds {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 1;
-  pointer-events: none;
-}
-.cloud {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.025);
-  filter: blur(50px);
-}
-.cloud-1 { width: 500px; height: 80px; bottom: 15%; animation: drift 80s linear infinite; }
-.cloud-2 { width: 400px; height: 60px; bottom: 25%; animation: drift 100s linear infinite; animation-delay: -35s; }
-.cloud-3 { width: 600px; height: 50px; bottom: 10%; animation: drift 120s linear infinite; animation-delay: -60s; }
-@keyframes drift {
-  0% { transform: translateX(-650px); }
-  100% { transform: translateX(calc(100vw + 250px)); }
-}
-
-/* ============================================
+/* ==========================================================================
    RESPONSIVE
-   ============================================ */
-@media (max-width: 1024px) {
-  .section-split { grid-template-columns: 1fr; gap: 48px; text-align: center; }
-  .section-split > :first-child { order: 0; }
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
-  .free-pillars { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
-  .download-inner { flex-direction: column; text-align: center; }
-  .store-btns { justify-content: center; }
+   ========================================================================== */
+@media(max-width:1024px){
+  .sc-split { grid-template-columns:1fr; gap:44px; text-align:center; }
+  .f-grid { grid-template-columns:repeat(2,1fr); }
+  .free-cols { grid-template-columns:1fr; max-width:400px; margin-left:auto; margin-right:auto; }
+  .dl-inner { flex-direction:column; text-align:center; }
+  .store-btns { justify-content:center; }
 }
-@media (max-width: 768px) {
-  nav { padding: 12px 20px; }
-  .nav-links { display: none; }
-  .section { padding: 60px 20px; }
-  .moon { width: 140px; height: 140px; }
-  .moon--small { width: 90px; height: 90px; }
-  .phone { width: 200px; height: 410px; border-radius: 30px; }
-  .phone-notch { width: 75px; height: 20px; border-radius: 0 0 12px 12px; }
-  .phone-screen { padding: 30px 12px 12px; }
-  .features-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .feature-card { padding: 18px 14px; }
-  .hero-title { font-size: clamp(1.8rem, 7vw, 2.6rem); }
-  .hero-phone-wrap { margin-top: 32px; }
-  .free-pillars { gap: 16px; }
-  .download-inner { gap: 40px; }
+@media(max-width:768px){
+  nav { padding:11px 18px; }
+  .nav-links { display:none; }
+  .sc { padding:60px 18px; }
+  .moon { width:170px; height:170px; }
+  .moon--sm { width:95px; height:95px; }
+  .phone { width:200px; height:410px; border-radius:30px; }
+  .phone-notch { width:72px; height:20px; border-radius:0 0 11px 11px; }
+  .hero-title { font-size:clamp(1.8rem,7vw,2.6rem); }
+  .hero-phone-area { margin-top:28px; }
+  .f-grid { gap:10px; }
+  .f-card { padding:16px 12px; }
+  .free-cols { gap:14px; }
+  .dl-inner { gap:36px; }
+  .nebula--1,.nebula--2,.nebula--3 { display:none; }
+  .shooting-star { display:none; }
 }
-@media (max-width: 480px) {
-  .features-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .feature-card { padding: 16px 10px; }
-  .feature-card p { font-size: 0.7rem; }
-  .hero-badges { gap: 8px; }
-  .hero-badge { padding: 5px 10px; font-size: 0.7rem; }
+@media(max-width:480px){
+  .f-grid { grid-template-columns:1fr 1fr; gap:8px; }
+  .f-card p { font-size:.66rem; }
+  .hero-pills { gap:6px; }
+  .pill { padding:4px 10px; font-size:.7rem; }
 }
-
-/* ============================================
-   LOADING / INITIAL STATE
-   ============================================ */
-.gsap-hidden { visibility: hidden; }
 </style>
 </head>
 <body>
 
-<!-- ============================================
-     STARS (Fixed Background, 3 Parallax Layers)
-     ============================================ -->
-<div class="stars-container" aria-hidden="true">
-  <div class="stars-layer" id="stars-layer-1"></div>
-  <div class="stars-layer" id="stars-layer-2"></div>
-  <div class="stars-layer" id="stars-layer-3"></div>
+<!-- ======== ATMOSPHERE ======== -->
+<div class="stars-box" aria-hidden="true">
+  <div class="stars-layer" id="sl1"></div>
+  <div class="stars-layer" id="sl2"></div>
+  <div class="stars-layer" id="sl3"></div>
 </div>
+<div class="shooting-star" style="top:12%;left:5%;--d:9s;--dl:1s" aria-hidden="true"></div>
+<div class="shooting-star" style="top:35%;left:40%;--d:12s;--dl:5s" aria-hidden="true"></div>
+<div class="shooting-star" style="top:55%;left:15%;--d:10s;--dl:9s" aria-hidden="true"></div>
+<div class="nebula nebula--1" aria-hidden="true"></div>
+<div class="nebula nebula--2" aria-hidden="true"></div>
+<div class="nebula nebula--3" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 
-<!-- ============================================
-     NAVIGATION
-     ============================================ -->
+<!-- ======== NAV ======== -->
 <nav>
   <a href="#hero" class="nav-logo">Lummo</a>
   <ul class="nav-links">
@@ -1227,434 +808,267 @@ footer {
   <a href="#download" class="nav-cta">Get the App</a>
 </nav>
 
-<!-- ============================================
+<!-- ================================================================
      HERO
-     ============================================ -->
-<section id="hero" class="section">
-  <div class="clouds">
+     ================================================================ -->
+<section id="hero" class="sc">
+  <div class="hero-clouds">
     <div class="cloud cloud-1"></div>
     <div class="cloud cloud-2"></div>
     <div class="cloud cloud-3"></div>
   </div>
 
-  <div class="hero-top gsap-hidden">
-    <div class="moon-container">
+  <div class="hero-body">
+    <div class="moon-wrap anim" id="heroMoon">
       <div class="moon">
         <div class="crater crater--1"></div>
         <div class="crater crater--2"></div>
         <div class="crater crater--3"></div>
         <div class="crater crater--4"></div>
         <div class="crater crater--5"></div>
+        <div class="crater crater--6"></div>
       </div>
     </div>
 
-    <div class="hero-text">
-      <h1 class="hero-title">Your child's first years.<br><em>Every moment tracked.</em></h1>
-      <p class="hero-sub">Free baby tracker with AI insights. Works offline.</p>
-      <div class="hero-badges">
-        <span class="hero-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-          35+ screens
-        </span>
-        <span class="hero-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Works offline
-        </span>
-        <span class="hero-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          Free forever
-        </span>
-      </div>
+    <h1 class="hero-title anim">Your child's first years.<br><em>Every moment tracked.</em></h1>
+    <p class="hero-sub anim">Free baby tracker with AI insights. Works offline.</p>
+
+    <div class="hero-pills anim">
+      <span class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+        35+ screens
+      </span>
+      <span class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+        Works offline
+      </span>
+      <span class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Free forever
+      </span>
     </div>
 
-    <div class="hero-phone-wrap">
-      <!-- Phone Mockup -->
+    <div class="hero-phone-area anim">
       <div class="phone" id="heroPhone">
         <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="phone-status">
-            <span>9:41</span>
-            <div class="phone-status-icons">
-              <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
-              <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.34C7 21.4 7.6 22 8.33 22h7.34c.73 0 1.33-.6 1.33-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
-            </div>
+        <div class="ph-screen">
+          <div class="ph-status"><span>9:41</span><div class="ph-status-r"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.34C7 21.4 7.6 22 8.33 22h7.34c.73 0 1.33-.6 1.33-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+          <div class="ph-hdr"><h4>Today</h4><span>January 30</span></div>
+          <div class="ph-active">
+            <div class="ph-active-icon"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></div>
+            <div class="ph-active-info"><span class="ph-active-lbl">Sleeping</span><span class="ph-active-time" id="t1">1:23:07</span></div>
+            <button class="ph-active-stop">Stop</button>
           </div>
-          <div class="phone-header">
-            <h4>Today</h4>
-            <span>January 30</span>
+          <div class="ph-events">
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#B51DF6"></div><div class="ph-ev-info"><span class="ph-ev-type">Bottle</span><span class="ph-ev-detail">120 ml · 12 min</span></div><span class="ph-ev-time">45m</span></div>
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#4CAF50"></div><div class="ph-ev-info"><span class="ph-ev-type">Diaper</span><span class="ph-ev-detail">Wet</span></div><span class="ph-ev-time">1h</span></div>
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#FFBE02"></div><div class="ph-ev-info"><span class="ph-ev-type">Temperature</span><span class="ph-ev-detail">36.6°C — normal</span></div><span class="ph-ev-time">2h</span></div>
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#B51DF6"></div><div class="ph-ev-info"><span class="ph-ev-type">Breastfeeding</span><span class="ph-ev-detail">Left · 18 min</span></div><span class="ph-ev-time">3h</span></div>
           </div>
-          <!-- Active sleep card -->
-          <div class="phone-active-card sleep-card">
-            <div class="phone-card-icon">
-              <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
-            </div>
-            <div class="phone-card-info">
-              <span class="phone-card-label">Sleeping</span>
-              <span class="phone-card-timer">1:23:07</span>
-            </div>
-            <button class="phone-card-stop">Stop</button>
-          </div>
-          <!-- Events -->
-          <div class="phone-events">
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#B51DF6"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Bottle</span>
-                <span class="phone-event-detail">120 ml · 12 min</span>
-              </div>
-              <span class="phone-event-time">45m</span>
-            </div>
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#4CAF50"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Diaper</span>
-                <span class="phone-event-detail">Wet</span>
-              </div>
-              <span class="phone-event-time">1h</span>
-            </div>
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#FFBE02"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Temperature</span>
-                <span class="phone-event-detail">36.6°C — normal</span>
-              </div>
-              <span class="phone-event-time">2h</span>
-            </div>
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#B51DF6"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Breastfeeding</span>
-                <span class="phone-event-detail">Left · 18 min</span>
-              </div>
-              <span class="phone-event-time">3h</span>
-            </div>
-          </div>
-          <!-- Tab bar -->
-          <div class="phone-tab-bar">
-            <div class="phone-tab active">
-              <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
-              <span>Sleep</span>
-            </div>
-            <div class="phone-tab">
-              <svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/></svg>
-              <span>Feed</span>
-            </div>
-            <div class="phone-tab">
-              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              <span>Health</span>
-            </div>
-            <div class="phone-tab">
-              <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
-              <span>More</span>
-            </div>
+          <div class="ph-tabs">
+            <div class="ph-tab on"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg><span>Sleep</span></div>
+            <div class="ph-tab"><svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/></svg><span>Feed</span></div>
+            <div class="ph-tab"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Health</span></div>
+            <div class="ph-tab"><svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg><span>More</span></div>
           </div>
         </div>
-        <div class="phone-fab">+</div>
+        <div class="ph-fab">+</div>
       </div>
     </div>
   </div>
 
-  <button class="scroll-indicator" aria-label="Scroll down" onclick="document.getElementById('problem').scrollIntoView({behavior:'smooth'})">
+  <button class="scroll-hint" aria-label="Scroll down" onclick="document.getElementById('problem').scrollIntoView({behavior:'smooth'})">
     <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
   </button>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      THE PROBLEM
-     ============================================ -->
-<section id="problem" class="section">
-  <div class="section-inner">
-    <div class="section-content-center gsap-hidden">
-      <p class="problem-number" id="problemNumber">8–12</p>
-      <p class="problem-label">events every day</p>
-      <p class="problem-desc">
+     ================================================================ -->
+<section id="problem" class="sc">
+  <div class="sc-inner">
+    <div class="sc-center">
+      <p class="prob-num anim">8–12</p>
+      <p class="prob-sub anim">events every day</p>
+      <p class="prob-desc anim">
         Feedings, naps, diapers, medications, temperature, weight.<br>
         <strong>Most parents forget half of them by evening.</strong>
       </p>
-      <p class="problem-punchline">Lummo remembers everything.</p>
+      <p class="prob-punch anim">Lummo remembers everything.</p>
     </div>
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      SLEEP
-     ============================================ -->
-<section id="sleep" class="section">
-  <div class="section-inner">
-    <div class="section-split">
-      <div class="gsap-hidden">
-        <p class="label sleep-section-label">Sleep tracking</p>
-        <h2 class="heading" style="margin-top:12px">One tap to start.<br>AI predicts the next nap.</h2>
-        <p class="body-text" style="margin-top:20px">
-          Start the timer with one touch. Lummo analyzes your child's sleep patterns and predicts when the next sleep window opens. Smart notifications before the window closes.
-        </p>
-        <p class="body-text" style="margin-top:12px">
-          Total sleep, nap count, night wakings, sleep quality — in numbers, not guessing. Trends over days, weeks, months.
-        </p>
+     ================================================================ -->
+<section id="sleep" class="sc">
+  <div class="sc-inner">
+    <div class="sc-split">
+      <div>
+        <p class="label anim" style="color:var(--sleep)">Sleep tracking</p>
+        <h2 class="heading anim" style="margin-top:12px">One tap to start.<br>AI predicts the next nap.</h2>
+        <p class="body anim" style="margin-top:18px">Start the timer with one touch. Lummo analyzes your child's sleep patterns and predicts when the next sleep window opens. Smart notifications before the window closes.</p>
+        <p class="body anim" style="margin-top:10px">Total sleep, nap count, night wakings, sleep quality — in numbers, not guessing. Trends over days, weeks, months.</p>
       </div>
-      <div class="sleep-visual gsap-hidden">
-        <div class="moon-container" style="margin-bottom:24px">
-          <div class="moon moon--small">
+      <div class="sleep-vis">
+        <div class="moon-wrap anim" style="margin-bottom:16px">
+          <div class="moon moon--sm">
             <div class="crater crater--1"></div>
             <div class="crater crater--2"></div>
             <div class="crater crater--3"></div>
           </div>
         </div>
-        <div class="sleep-demo">
-          <div class="sleep-demo-timer">01:23:07</div>
-          <div class="sleep-demo-label">Nap in progress</div>
-          <button class="sleep-demo-btn">Stop sleep</button>
+        <div class="sleep-card anim">
+          <div class="sleep-timer" id="t2">01:23:07</div>
+          <div class="sleep-lbl">Nap in progress</div>
+          <button class="sleep-btn">Stop sleep</button>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      FEEDING
-     ============================================ -->
-<section id="feeding" class="section">
-  <div class="section-inner">
-    <div class="section-split">
-      <div class="feeding-visual gsap-hidden">
-        <div class="feeding-icon-wrap">
+     ================================================================ -->
+<section id="feeding" class="sc">
+  <div class="sc-inner">
+    <div class="sc-split">
+      <div class="feed-vis">
+        <div class="feed-orb anim">
           <svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6zm10 14.5V20H8v-3.5l4-4 4 4zM8 7.5V4h8v3.5l-4 4-4-4z"/></svg>
         </div>
-        <div class="feeding-cards">
-          <div class="feeding-card">
-            <div class="feeding-card-value">L 18m</div>
-            <div class="feeding-card-label">Last breast</div>
-          </div>
-          <div class="feeding-card">
-            <div class="feeding-card-value">120 ml</div>
-            <div class="feeding-card-label">Bottle</div>
-          </div>
-          <div class="feeding-card">
-            <div class="feeding-card-value">45m ago</div>
-            <div class="feeding-card-label">Last feed</div>
-          </div>
+        <div class="feed-chips anim">
+          <div class="chip"><div class="chip-val">L 18m</div><div class="chip-lbl">Last breast</div></div>
+          <div class="chip"><div class="chip-val">120 ml</div><div class="chip-lbl">Bottle</div></div>
+          <div class="chip"><div class="chip-val">45m ago</div><div class="chip-lbl">Last feed</div></div>
         </div>
       </div>
-      <div class="gsap-hidden">
-        <p class="label feeding-section-label">Feeding</p>
-        <h2 class="heading" style="margin-top:12px">Breast, bottle, solids —<br>timed to the second.</h2>
-        <p class="body-text" style="margin-top:20px">
-          Which breast was last? How long since the last feeding? How much expressed milk is left?
-        </p>
-        <p class="body-text" style="margin-top:12px">
-          Lummo tracks it all. Timer for breastfeeding with left/right memory. Volume tracking for bottles. Solids log with categories. You just glance at your phone.
-        </p>
+      <div>
+        <p class="label anim" style="color:var(--feeding)">Feeding</p>
+        <h2 class="heading anim" style="margin-top:12px">Breast, bottle, solids —<br>timed to the second.</h2>
+        <p class="body anim" style="margin-top:18px">Which breast was last? How long since the last feeding? How much expressed milk is left?</p>
+        <p class="body anim" style="margin-top:10px">Lummo tracks it all. Timer for breastfeeding with left/right memory. Volume tracking for bottles. Solids log with categories. You just glance at your phone.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      HEALTH & GROWTH
-     ============================================ -->
-<section id="health" class="section">
-  <div class="section-inner">
-    <div class="section-split">
-      <div class="gsap-hidden">
-        <p class="label health-section-label">Health & Growth</p>
-        <h2 class="heading" style="margin-top:12px">Charts your pediatrician<br>will love.</h2>
-        <p class="body-text" style="margin-top:20px">
-          Temperature, medications, weight, height — everything in clean charts with percentile curves. Export a PDF report before your next visit.
-        </p>
-        <p class="body-text" style="margin-top:12px">
-          Track vaccinations, allergies, teeth eruptions. Every detail in one place, always accessible, even without internet.
-        </p>
+     ================================================================ -->
+<section id="health" class="sc">
+  <div class="sc-inner">
+    <div class="sc-split">
+      <div>
+        <p class="label anim" style="color:var(--health)">Health & Growth</p>
+        <h2 class="heading anim" style="margin-top:12px">Charts your pediatrician<br>will love.</h2>
+        <p class="body anim" style="margin-top:18px">Temperature, medications, weight, height — everything in clean charts with percentile curves. Export a PDF report before your next visit.</p>
+        <p class="body anim" style="margin-top:10px">Track vaccinations, allergies, teeth eruptions. Every detail in one place, always accessible, even without internet.</p>
       </div>
-      <div class="health-visual gsap-hidden">
-        <div class="growth-chart-wrap">
-          <div class="growth-chart-header">
-            <span class="growth-chart-title">Weight, kg</span>
-            <span class="growth-chart-period">0–12 months</span>
-          </div>
-          <svg class="growth-chart-svg" viewBox="0 0 300 120" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="healthGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FFBE02" stop-opacity="0.3"/>
-                <stop offset="100%" stop-color="#FFBE02" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <!-- Grid lines -->
-            <line class="grid-line" x1="0" y1="30" x2="300" y2="30"/>
-            <line class="grid-line" x1="0" y1="60" x2="300" y2="60"/>
-            <line class="grid-line" x1="0" y1="90" x2="300" y2="90"/>
-            <!-- Data area -->
-            <path class="data-area" d="M0,100 L25,95 50,88 75,80 100,72 125,65 150,58 175,52 200,47 225,42 250,38 275,35 300,32 L300,120 L0,120 Z"/>
-            <!-- Data line -->
-            <path class="data-line" d="M0,100 L25,95 50,88 75,80 100,72 125,65 150,58 175,52 200,47 225,42 250,38 275,35 300,32"/>
-            <!-- Data dots -->
-            <circle class="data-dot" cx="0" cy="100" r="3"/>
-            <circle class="data-dot" cx="75" cy="80" r="3"/>
-            <circle class="data-dot" cx="150" cy="58" r="3"/>
-            <circle class="data-dot" cx="225" cy="42" r="3"/>
-            <circle class="data-dot" cx="300" cy="32" r="3"/>
+      <div class="health-vis">
+        <div class="chart-box anim">
+          <div class="chart-hdr"><span class="chart-title">Weight, kg</span><span class="chart-period">0–12 months</span></div>
+          <svg class="chart-svg" viewBox="0 0 300 120" preserveAspectRatio="none">
+            <defs><linearGradient id="hGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFBE02" stop-opacity=".3"/><stop offset="100%" stop-color="#FFBE02" stop-opacity="0"/></linearGradient></defs>
+            <line class="gline" x1="0" y1="30" x2="300" y2="30"/>
+            <line class="gline" x1="0" y1="60" x2="300" y2="60"/>
+            <line class="gline" x1="0" y1="90" x2="300" y2="90"/>
+            <path class="darea" d="M0,100 L25,95 50,88 75,80 100,72 125,65 150,58 175,52 200,47 225,42 250,38 275,35 300,32 L300,120 L0,120Z"/>
+            <path class="dline" id="chartLine" d="M0,100 L25,95 50,88 75,80 100,72 125,65 150,58 175,52 200,47 225,42 250,38 275,35 300,32"/>
+            <circle class="ddot" cx="0" cy="100" r="3"/>
+            <circle class="ddot" cx="75" cy="80" r="3"/>
+            <circle class="ddot" cx="150" cy="58" r="3"/>
+            <circle class="ddot" cx="225" cy="42" r="3"/>
+            <circle class="ddot" cx="300" cy="32" r="3"/>
           </svg>
         </div>
-        <div class="health-stats">
-          <div class="health-stat">
-            <div class="health-stat-value">8.2 kg</div>
-            <div class="health-stat-label">Current weight</div>
-          </div>
-          <div class="health-stat">
-            <div class="health-stat-value">71 cm</div>
-            <div class="health-stat-label">Height</div>
-          </div>
-          <div class="health-stat">
-            <div class="health-stat-value">P65</div>
-            <div class="health-stat-label">Percentile</div>
-          </div>
+        <div class="h-stats anim">
+          <div class="h-stat"><div class="h-stat-v">8.2 kg</div><div class="h-stat-l">Current weight</div></div>
+          <div class="h-stat"><div class="h-stat-v">71 cm</div><div class="h-stat-l">Height</div></div>
+          <div class="h-stat"><div class="h-stat-v">P65</div><div class="h-stat-l">Percentile</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      AI ADVISOR
-     ============================================ -->
-<section id="ai-advisor" class="section">
-  <div class="section-inner">
-    <div class="section-split">
-      <div class="ai-visual gsap-hidden">
-        <div class="ai-orb" id="aiOrb">
-          <div class="sparkle" style="top:10%;left:15%;--dur:2.5s;--del:0s;width:6px;height:6px"></div>
-          <div class="sparkle" style="top:5%;right:20%;--dur:3s;--del:0.8s;width:4px;height:4px"></div>
-          <div class="sparkle" style="bottom:15%;left:10%;--dur:2.8s;--del:1.5s;width:5px;height:5px"></div>
-          <div class="sparkle" style="bottom:5%;right:15%;--dur:3.2s;--del:0.4s;width:4px;height:4px"></div>
-          <div class="sparkle" style="top:50%;left:-5%;--dur:2.6s;--del:2s;width:3px;height:3px"></div>
-          <div class="sparkle" style="top:30%;right:-8%;--dur:3.5s;--del:1.2s;width:5px;height:5px"></div>
+     ================================================================ -->
+<section id="ai" class="sc">
+  <div class="sc-inner">
+    <div class="sc-split">
+      <div class="ai-vis">
+        <div class="ai-orb anim" id="aiOrb">
+          <div class="sparkle" style="top:8%;left:12%;--d:2.5s;--dl:0s;width:6px;height:6px"></div>
+          <div class="sparkle" style="top:3%;right:18%;--d:3s;--dl:.8s;width:4px;height:4px"></div>
+          <div class="sparkle" style="bottom:12%;left:8%;--d:2.8s;--dl:1.5s;width:5px;height:5px"></div>
+          <div class="sparkle" style="bottom:3%;right:12%;--d:3.2s;--dl:.4s;width:4px;height:4px"></div>
+          <div class="sparkle" style="top:48%;left:-8%;--d:2.6s;--dl:2s;width:3px;height:3px"></div>
+          <div class="sparkle" style="top:28%;right:-10%;--d:3.5s;--dl:1.2s;width:5px;height:5px"></div>
+          <div class="sparkle" style="bottom:30%;left:-5%;--d:2.9s;--dl:2.5s;width:4px;height:4px"></div>
+          <div class="sparkle" style="top:60%;right:-3%;--d:3.1s;--dl:.6s;width:3px;height:3px"></div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:300px;align-items:stretch">
-          <div class="ai-chat-bubble">"Is my baby getting enough sleep for her age?"</div>
-          <div class="ai-chat-response">"Based on Emma's data: she averages 14.2h/day, which is in the healthy range for 4 months. Her nap pattern is consistent. ✓"</div>
+        <div style="display:flex;flex-direction:column;gap:11px;width:100%;max-width:280px;align-items:stretch">
+          <div class="chat-q anim">"Is my baby getting enough sleep for her age?"</div>
+          <div class="chat-a anim">"Based on Emma's data: she averages 14.2h/day — healthy range for 4 months. Nap pattern is consistent. ✓"</div>
         </div>
       </div>
-      <div class="gsap-hidden">
-        <p class="label ai-section-label">AI Advisor</p>
-        <h2 class="heading" style="margin-top:12px">Ask anything.<br>Get answers from <em style="font-style:normal;color:var(--ai)">your</em> child's data.</h2>
-        <p class="body-text" style="margin-top:20px">
-          "When should we introduce solids?" "Is this temperature normal?" "Why is she waking up at night?"
-        </p>
-        <p class="body-text" style="margin-top:12px">
-          Lummo's AI analyzes your child's real data — not generic articles from Google. Personalized answers, right when you need them.
-        </p>
+      <div>
+        <p class="label anim" style="color:var(--ai)">AI Advisor</p>
+        <h2 class="heading anim" style="margin-top:12px">Ask anything.<br>Get answers from <em style="font-style:normal;color:var(--ai)">your</em> child's data.</h2>
+        <p class="body anim" style="margin-top:18px">"When should we introduce solids?" "Is this temperature normal?" "Why is she waking up at night?"</p>
+        <p class="body anim" style="margin-top:10px">Lummo's AI analyzes your child's real data — not generic articles from Google. Personalized answers, right when you need them.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      EVERYTHING ELSE
-     ============================================ -->
-<section id="features" class="section">
-  <div class="section-inner">
-    <div class="section-content-center gsap-hidden">
-      <p class="label" style="color:var(--text-dim)">And so much more</p>
-      <h2 class="heading" style="margin-top:12px">35+ screens. 30+ activity types.<br>Everything in one app.</h2>
+     ================================================================ -->
+<section id="features" class="sc">
+  <div class="sc-inner">
+    <div class="sc-center">
+      <p class="label anim" style="color:var(--text-dim)">And so much more</p>
+      <h2 class="heading anim" style="margin-top:12px">35+ screens. 30+ activity types.<br>Everything in one app.</h2>
     </div>
-    <div class="features-grid">
-      <!-- Diapers -->
-      <div class="feature-card fc-diaper gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.64c0 2 .78 4.11 2.34 5.67a7.99 7.99 0 0 0 11.32 0c1.56-1.56 2.34-3.67 2.34-5.67S19.22 9.56 17.66 8zM6 14c.01-2 .62-3.27 1.76-4.4L12 5.27l4.24 4.38C17.38 10.77 17.99 12 18 14H6z"/></svg>
-        </div>
-        <h4>Diapers</h4>
-        <p>Wet, dirty, mixed — one tap</p>
-      </div>
-      <!-- Activities -->
-      <div class="feature-card fc-activity gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>
-        </div>
-        <h4>Activities</h4>
-        <p>30+ types: walks, baths, tummy time</p>
-      </div>
-      <!-- Milestones -->
-      <div class="feature-card fc-milestone gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
-        </div>
-        <h4>Milestones</h4>
-        <p>First smile, first step — capture them all</p>
-      </div>
-      <!-- Pumping -->
-      <div class="feature-card fc-pump gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6zm10 14.5V20H8v-3.5l4-4 4 4zM8 7.5V4h8v3.5l-4 4-4-4z"/></svg>
-        </div>
-        <h4>Pumping</h4>
-        <p>Sessions, volume, storage tracking</p>
-      </div>
-      <!-- Export -->
-      <div class="feature-card fc-export gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-        </div>
-        <h4>PDF Reports</h4>
-        <p>For your pediatrician visits</p>
-      </div>
-      <!-- Sync -->
-      <div class="feature-card fc-sync gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        </div>
-        <h4>Family Sync</h4>
-        <p>Both parents see everything</p>
-      </div>
-      <!-- Widgets -->
-      <div class="feature-card fc-widget gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M13 13v8h8v-8h-8zM3 21h8v-8H3v8zM3 3v8h8V3H3zm13.66-1.31L11 7.34 16.66 13l5.66-5.66-5.66-5.65z"/></svg>
-        </div>
-        <h4>Widgets</h4>
-        <p>iOS & Android home screen</p>
-      </div>
-      <!-- Reminders -->
-      <div class="feature-card fc-remind gsap-hidden">
-        <div class="feature-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-        </div>
-        <h4>Reminders</h4>
-        <p>Never miss a medication dose</p>
-      </div>
+    <div class="f-grid">
+      <div class="f-card fc-1 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.64c0 2 .78 4.11 2.34 5.67a7.99 7.99 0 0 0 11.32 0c1.56-1.56 2.34-3.67 2.34-5.67S19.22 9.56 17.66 8zM6 14c.01-2 .62-3.27 1.76-4.4L12 5.27l4.24 4.38C17.38 10.77 17.99 12 18 14H6z"/></svg></div><h4>Diapers</h4><p>Wet, dirty, mixed — one tap</p></div>
+      <div class="f-card fc-2 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg></div><h4>Activities</h4><p>30+ types: walks, baths, tummy time</p></div>
+      <div class="f-card fc-3 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></div><h4>Milestones</h4><p>First smile, first step — capture them all</p></div>
+      <div class="f-card fc-4 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6zm10 14.5V20H8v-3.5l4-4 4 4zM8 7.5V4h8v3.5l-4 4-4-4z"/></svg></div><h4>Pumping</h4><p>Sessions, volume, storage tracking</p></div>
+      <div class="f-card fc-5 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div><h4>PDF Reports</h4><p>For your pediatrician visits</p></div>
+      <div class="f-card fc-6 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><h4>Family Sync</h4><p>Both parents see everything</p></div>
+      <div class="f-card fc-7 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M13 13v8h8v-8h-8zM3 21h8v-8H3v8zM3 3v8h8V3H3zm13.66-1.31L11 7.34 16.66 13l5.66-5.66-5.66-5.65z"/></svg></div><h4>Widgets</h4><p>iOS & Android home screen</p></div>
+      <div class="f-card fc-8 anim"><div class="f-card-ico"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div><h4>Reminders</h4><p>Never miss a medication dose</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      FREE + OFFLINE
-     ============================================ -->
-<section id="free" class="section">
-  <div class="section-inner">
-    <div class="section-content-center gsap-hidden">
-      <h2 class="heading">No subscription. No internet required.<br>Your data, your device.</h2>
+     ================================================================ -->
+<section id="free" class="sc">
+  <div class="sc-inner">
+    <div class="sc-center">
+      <h2 class="heading anim">No subscription. No internet required.<br>Your data, your device.</h2>
     </div>
-    <div class="free-pillars">
-      <!-- Free -->
-      <div class="free-pillar fp-free gsap-hidden">
-        <div class="free-pillar-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        </div>
+    <div class="free-cols">
+      <div class="free-col fi-1 anim">
+        <div class="free-ico"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
         <h3>Free</h3>
         <p>Core features cost nothing. Not a trial — free forever. No paywall for what matters.</p>
       </div>
-      <!-- Offline -->
-      <div class="free-pillar fp-offline gsap-hidden">
-        <div class="free-pillar-icon">
-          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2z"/></svg>
-        </div>
+      <div class="free-col fi-2 anim">
+        <div class="free-ico"><svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg></div>
         <h3>Offline</h3>
         <p>Works without WiFi or mobile data. Log feedings on a plane, track sleep in the countryside. Always ready.</p>
       </div>
-      <!-- Private -->
-      <div class="free-pillar fp-private gsap-hidden">
-        <div class="free-pillar-icon">
-          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-        </div>
+      <div class="free-col fi-3 anim">
+        <div class="free-ico"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg></div>
         <h3>Private</h3>
         <p>Your child's data stays on your device. No mandatory accounts. No data collection. No selling your information.</p>
       </div>
@@ -1662,109 +1076,49 @@ footer {
   </div>
 </section>
 
-<!-- ============================================
+<!-- ================================================================
      DOWNLOAD
-     ============================================ -->
-<section id="download" class="section">
-  <div class="section-inner">
-    <div class="download-inner">
-      <div class="phone gsap-hidden" style="box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 25px 80px rgba(0,0,0,0.5),0 0 80px rgba(60,56,255,0.08)">
+     ================================================================ -->
+<section id="download" class="sc">
+  <div class="sc-inner">
+    <div class="dl-inner">
+      <div class="phone anim" style="box-shadow:0 0 0 1px rgba(255,255,255,.03),0 30px 80px rgba(0,0,0,.55),0 0 90px rgba(60,56,255,.09)">
         <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="phone-status">
-            <span>9:41</span>
-            <div class="phone-status-icons">
-              <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
-              <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.34C7 21.4 7.6 22 8.33 22h7.34c.73 0 1.33-.6 1.33-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
-            </div>
+        <div class="ph-screen">
+          <div class="ph-status"><span>9:41</span><div class="ph-status-r"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.34C7 21.4 7.6 22 8.33 22h7.34c.73 0 1.33-.6 1.33-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></div></div>
+          <div class="ph-hdr"><h4>Today</h4><span>January 30</span></div>
+          <div class="ph-active">
+            <div class="ph-active-icon"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></div>
+            <div class="ph-active-info"><span class="ph-active-lbl">Sleeping</span><span class="ph-active-time" id="t3">1:23:07</span></div>
+            <button class="ph-active-stop">Stop</button>
           </div>
-          <div class="phone-header">
-            <h4>Today</h4>
-            <span>January 30</span>
+          <div class="ph-events">
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#B51DF6"></div><div class="ph-ev-info"><span class="ph-ev-type">Bottle</span><span class="ph-ev-detail">120 ml · 12 min</span></div><span class="ph-ev-time">45m</span></div>
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#4CAF50"></div><div class="ph-ev-info"><span class="ph-ev-type">Diaper</span><span class="ph-ev-detail">Wet</span></div><span class="ph-ev-time">1h</span></div>
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#FFBE02"></div><div class="ph-ev-info"><span class="ph-ev-type">Temperature</span><span class="ph-ev-detail">36.6°C — normal</span></div><span class="ph-ev-time">2h</span></div>
+            <div class="ph-ev"><div class="ph-ev-dot" style="background:#B51DF6"></div><div class="ph-ev-info"><span class="ph-ev-type">Breastfeeding</span><span class="ph-ev-detail">Left · 18 min</span></div><span class="ph-ev-time">3h</span></div>
           </div>
-          <div class="phone-active-card sleep-card">
-            <div class="phone-card-icon">
-              <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
-            </div>
-            <div class="phone-card-info">
-              <span class="phone-card-label">Sleeping</span>
-              <span class="phone-card-timer">1:23:07</span>
-            </div>
-            <button class="phone-card-stop">Stop</button>
-          </div>
-          <div class="phone-events">
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#B51DF6"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Bottle</span>
-                <span class="phone-event-detail">120 ml · 12 min</span>
-              </div>
-              <span class="phone-event-time">45m</span>
-            </div>
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#4CAF50"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Diaper</span>
-                <span class="phone-event-detail">Wet</span>
-              </div>
-              <span class="phone-event-time">1h</span>
-            </div>
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#FFBE02"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Temperature</span>
-                <span class="phone-event-detail">36.6°C — normal</span>
-              </div>
-              <span class="phone-event-time">2h</span>
-            </div>
-            <div class="phone-event">
-              <div class="phone-event-dot" style="background:#B51DF6"></div>
-              <div class="phone-event-info">
-                <span class="phone-event-type">Breastfeeding</span>
-                <span class="phone-event-detail">Left · 18 min</span>
-              </div>
-              <span class="phone-event-time">3h</span>
-            </div>
-          </div>
-          <div class="phone-tab-bar">
-            <div class="phone-tab active">
-              <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
-              <span>Sleep</span>
-            </div>
-            <div class="phone-tab">
-              <svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/></svg>
-              <span>Feed</span>
-            </div>
-            <div class="phone-tab">
-              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              <span>Health</span>
-            </div>
-            <div class="phone-tab">
-              <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
-              <span>More</span>
-            </div>
+          <div class="ph-tabs">
+            <div class="ph-tab on"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg><span>Sleep</span></div>
+            <div class="ph-tab"><svg viewBox="0 0 24 24"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/></svg><span>Feed</span></div>
+            <div class="ph-tab"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Health</span></div>
+            <div class="ph-tab"><svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg><span>More</span></div>
           </div>
         </div>
-        <div class="phone-fab">+</div>
+        <div class="ph-fab">+</div>
       </div>
 
-      <div class="download-text gsap-hidden">
-        <h2>Download Lummo.<br>It's free.</h2>
-        <p>Your quiet companion for the first years. Track everything, remember everything. No subscription, no internet required.</p>
-        <div class="store-btns">
-          <a class="store-btn" href="#" aria-label="App Store — Coming Soon">
+      <div class="dl-text">
+        <h2 class="anim">Download Lummo.<br>It's free.</h2>
+        <p class="anim">Your quiet companion for the first years. Track everything, remember everything. No subscription, no internet required.</p>
+        <div class="store-btns anim">
+          <a class="store-btn" href="#" aria-label="App Store">
             <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            <div class="store-info">
-              <span class="soon">Coming soon</span>
-              <span class="name">App Store</span>
-            </div>
+            <div class="s-info"><span class="soon">Coming soon</span><span class="name">App Store</span></div>
           </a>
-          <a class="store-btn" href="#" aria-label="Google Play — Coming Soon">
+          <a class="store-btn" href="#" aria-label="Google Play">
             <svg viewBox="0 0 24 24"><path d="M3.61 1.81L13.79 12 3.61 22.19c-.38-.17-.61-.52-.61-.93V2.74c0-.41.23-.76.61-.93zm10.89 10.9l2.3 2.3-10.94 6.33 8.64-8.63zm3.2-3.2l2.3 2.3-2.3 2.3-2.73-2.3 2.73-2.3zM5.86 2.66L16.8 8.99l-2.3 2.3-8.64-8.63z"/></svg>
-            <div class="store-info">
-              <span class="soon">Coming soon</span>
-              <span class="name">Google Play</span>
-            </div>
+            <div class="s-info"><span class="soon">Coming soon</span><span class="name">Google Play</span></div>
           </a>
         </div>
       </div>
@@ -1772,268 +1126,209 @@ footer {
   </div>
 </section>
 
-<!-- ============================================
-     FOOTER
-     ============================================ -->
+<!-- ======== FOOTER ======== -->
 <footer>
-  <div class="footer-links">
+  <div class="ft-links">
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms of Service</a>
     <a href="mailto:support@lummo.app">Contact</a>
   </div>
-  <p class="footer-copy">&copy; 2025 Lummo. All rights reserved.</p>
+  <p class="ft-copy">&copy; 2025 Lummo. All rights reserved.</p>
 </footer>
 
-<!-- ============================================
-     GSAP + ScrollTrigger
-     ============================================ -->
+<!-- ======== GSAP ======== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <script>
-/* ============================================
-   STAR GENERATION
-   ============================================ */
-(function generateStars() {
-  var layers = [
-    { id: 'stars-layer-1', count: 180, minSize: 0.3, maxSize: 1, cls: 'star--s' },
-    { id: 'stars-layer-2', count: 90,  minSize: 0.8, maxSize: 1.8, cls: 'star--m' },
-    { id: 'stars-layer-3', count: 35,  minSize: 1.5, maxSize: 3,   cls: 'star--l' }
+/* ==========================================================================
+   STARS — 3 layers with different density & size
+   ========================================================================== */
+(function(){
+  var L=[
+    {id:'sl1',n:220,lo:.3,hi:1,  cls:'star--s'},
+    {id:'sl2',n:110,lo:.8,hi:1.9,cls:'star--m'},
+    {id:'sl3',n:45, lo:1.5,hi:3.2,cls:'star--l'}
   ];
-  layers.forEach(function(layer) {
-    var el = document.getElementById(layer.id);
-    if (!el) return;
-    var frag = document.createDocumentFragment();
-    for (var i = 0; i < layer.count; i++) {
-      var s = document.createElement('div');
-      s.className = 'star ' + layer.cls;
-      var sz = Math.random() * (layer.maxSize - layer.minSize) + layer.minSize;
-      var dur = (Math.random() * 5 + 3).toFixed(1);
-      var del = (Math.random() * 8).toFixed(1);
-      s.style.cssText =
-        'left:' + (Math.random() * 100).toFixed(2) + '%;' +
-        'top:' + (Math.random() * 100).toFixed(2) + '%;' +
-        'width:' + sz.toFixed(2) + 'px;' +
-        'height:' + sz.toFixed(2) + 'px;' +
-        '--dur:' + dur + 's;' +
-        '--del:' + del + 's';
-      frag.appendChild(s);
+  L.forEach(function(l){
+    var el=document.getElementById(l.id); if(!el)return;
+    var f=document.createDocumentFragment();
+    for(var i=0;i<l.n;i++){
+      var s=document.createElement('div');
+      s.className='star '+l.cls;
+      var sz=Math.random()*(l.hi-l.lo)+l.lo;
+      s.style.cssText=
+        'left:'+(Math.random()*100).toFixed(1)+'%;'+
+        'top:'+(Math.random()*100).toFixed(1)+'%;'+
+        'width:'+sz.toFixed(2)+'px;height:'+sz.toFixed(2)+'px;'+
+        '--d:'+(Math.random()*5+3).toFixed(1)+'s;'+
+        '--dl:'+(Math.random()*9).toFixed(1)+'s';
+      f.appendChild(s);
     }
-    el.appendChild(frag);
+    el.appendChild(f);
   });
 })();
 
-/* ============================================
-   GSAP ANIMATIONS
-   ============================================ */
+/* ==========================================================================
+   GSAP + ScrollTrigger
+   ========================================================================== */
 gsap.registerPlugin(ScrollTrigger);
 
-// Make all gsap-hidden elements visible (they start hidden to prevent FOUC)
-gsap.set('.gsap-hidden', { visibility: 'visible' });
+/* --- Reveal all .anim elements (prevents FOUC fallback) --- */
+gsap.set('.anim',{opacity:1,y:0,clearProps:'transform'});
 
-/* ----- Hero Entrance ----- */
-var heroTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-heroTl
-  .from('.moon-container', { y: 80, opacity: 0, scale: 0.85, duration: 1.4 })
-  .from('.hero-title', { y: 35, opacity: 0, duration: 1 }, '-=0.7')
-  .from('.hero-sub', { y: 25, opacity: 0, duration: 0.8 }, '-=0.5')
-  .from('.hero-badges', { y: 20, opacity: 0, duration: 0.7 }, '-=0.4')
-  .from('.hero-phone-wrap', { y: 50, opacity: 0, duration: 1.1 }, '-=0.5')
-  .from('.scroll-indicator', { opacity: 0, duration: 0.6 }, '-=0.3');
+/* --- HERO entrance timeline --- */
+var hero=gsap.timeline({defaults:{ease:'power2.out'}});
+hero
+  .from('#heroMoon',{y:100,opacity:0,scale:.8,duration:1.5})
+  .from('.hero-title',{y:40,opacity:0,duration:1},'-=.8')
+  .from('.hero-sub',{y:28,opacity:0,duration:.8},'-=.5')
+  .from('.hero-pills',{y:22,opacity:0,duration:.7},'-=.4')
+  .from('.hero-phone-area',{y:55,opacity:0,duration:1.2},'-=.5')
+  .from('.scroll-hint',{opacity:0,duration:.5},'-=.3');
 
-/* ----- Moon Parallax on Scroll ----- */
-gsap.to('.hero-top .moon-container', {
-  y: -120,
-  opacity: 0.3,
-  scrollTrigger: {
-    trigger: '#hero',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: 1.5
-  }
+/* --- Moon parallax on scroll --- */
+gsap.to('#heroMoon',{
+  y:-140, opacity:.2,
+  scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}
 });
-
-/* ----- Hero Phone Parallax ----- */
-gsap.to('.hero-phone-wrap', {
-  y: -40,
-  scrollTrigger: {
-    trigger: '#hero',
-    start: '60% top',
-    end: 'bottom top',
-    scrub: 1
-  }
+/* Hero phone slight lift */
+gsap.to('.hero-phone-area',{
+  y:-50,
+  scrollTrigger:{trigger:'#hero',start:'50% top',end:'bottom top',scrub:1}
 });
 
-/* ----- Star Layer Parallax (different speeds) ----- */
-gsap.to('#stars-layer-1', {
-  y: '-8%',
-  scrollTrigger: {
-    trigger: 'body',
-    start: 'top top',
-    end: 'bottom bottom',
-    scrub: 2
-  }
-});
-gsap.to('#stars-layer-2', {
-  y: '-18%',
-  scrollTrigger: {
-    trigger: 'body',
-    start: 'top top',
-    end: 'bottom bottom',
-    scrub: 1.5
-  }
-});
-gsap.to('#stars-layer-3', {
-  y: '-30%',
-  scrollTrigger: {
-    trigger: 'body',
-    start: 'top top',
-    end: 'bottom bottom',
-    scrub: 1
-  }
+/* --- Star layer parallax (3 speeds) --- */
+gsap.to('#sl1',{y:'-6%',  scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2.5}});
+gsap.to('#sl2',{y:'-16%', scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:1.8}});
+gsap.to('#sl3',{y:'-28%', scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:1}});
+
+/* --- Nebula parallax (very slow) --- */
+gsap.to('.nebula--1',{y:'-12%',x:'5%', scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:3}});
+gsap.to('.nebula--2',{y:'-8%', x:'-4%',scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:3.5}});
+gsap.to('.nebula--3',{y:'-15%',        scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:4}});
+
+/* --- Section reveal helper --- */
+function revealSection(trigger, els, stagger){
+  stagger = stagger || 0;
+  els.forEach(function(sel,i){
+    gsap.from(sel,{
+      y:45, opacity:0, duration:1, delay: stagger*i,
+      ease:'power2.out',
+      scrollTrigger:{trigger:trigger,start:'top 62%',toggleActions:'play none none reverse'}
+    });
+  });
+}
+
+/* Problem */
+revealSection('#problem',['.prob-num','.prob-sub','.prob-desc','.prob-punch'],.12);
+gsap.from('.prob-num',{
+  scale:.75, duration:1.3, ease:'power2.out',
+  scrollTrigger:{trigger:'#problem',start:'top 60%',toggleActions:'play none none reverse'}
 });
 
-/* ----- Section Reveal Animations ----- */
-// Problem section
-gsap.from('#problem .section-content-center', {
-  y: 50, opacity: 0, duration: 1, ease: 'power2.out',
-  scrollTrigger: { trigger: '#problem', start: 'top 65%', toggleActions: 'play none none reverse' }
-});
-gsap.from('.problem-number', {
-  scale: 0.8, opacity: 0, duration: 1.2, ease: 'power2.out',
-  scrollTrigger: { trigger: '#problem', start: 'top 60%', toggleActions: 'play none none reverse' }
-});
-gsap.from('.problem-punchline', {
-  y: 20, opacity: 0, duration: 0.8, delay: 0.5, ease: 'power2.out',
-  scrollTrigger: { trigger: '#problem', start: 'top 55%', toggleActions: 'play none none reverse' }
-});
-
-/* ----- Generic Section Reveals (split sections) ----- */
-document.querySelectorAll('.section-split').forEach(function(split) {
-  var section = split.closest('.section');
-  var children = split.querySelectorAll('.gsap-hidden');
-
-  children.forEach(function(child, i) {
-    gsap.from(child, {
-      y: 50,
-      opacity: 0,
-      duration: 1,
-      delay: i * 0.15,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 60%',
-        toggleActions: 'play none none reverse'
-      }
+/* Split sections — auto-reveal every .anim inside each .sc-split */
+document.querySelectorAll('.sc-split').forEach(function(sp){
+  var sec = sp.closest('.sc');
+  sp.querySelectorAll('.anim').forEach(function(el,i){
+    gsap.from(el,{
+      y:45, opacity:0, duration:1, delay:i*.12, ease:'power2.out',
+      scrollTrigger:{trigger:sec,start:'top 58%',toggleActions:'play none none reverse'}
     });
   });
 });
 
-/* ----- Features Grid Stagger ----- */
-gsap.from('#features .section-content-center', {
-  y: 40, opacity: 0, duration: 0.8, ease: 'power2.out',
-  scrollTrigger: { trigger: '#features', start: 'top 65%', toggleActions: 'play none none reverse' }
-});
-gsap.from('.feature-card', {
-  y: 40, opacity: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out',
-  scrollTrigger: { trigger: '.features-grid', start: 'top 70%', toggleActions: 'play none none reverse' }
+/* Sleep moon float enhancement */
+gsap.to('#sleep .moon-wrap',{
+  y:-22, rotation:3,
+  scrollTrigger:{trigger:'#sleep',start:'top bottom',end:'bottom top',scrub:2.5}
 });
 
-/* ----- Free Section ----- */
-gsap.from('#free .section-content-center', {
-  y: 40, opacity: 0, duration: 0.8, ease: 'power2.out',
-  scrollTrigger: { trigger: '#free', start: 'top 65%', toggleActions: 'play none none reverse' }
-});
-gsap.from('.free-pillar', {
-  y: 50, opacity: 0, scale: 0.95, duration: 0.7, stagger: 0.12, ease: 'power2.out',
-  scrollTrigger: { trigger: '.free-pillars', start: 'top 70%', toggleActions: 'play none none reverse' }
-});
-
-/* ----- Download Section ----- */
-gsap.from('#download .phone', {
-  y: 60, opacity: 0, scale: 0.9, duration: 1.2, ease: 'power2.out',
-  scrollTrigger: { trigger: '#download', start: 'top 60%', toggleActions: 'play none none reverse' }
-});
-gsap.from('#download .download-text', {
-  y: 40, opacity: 0, duration: 1, delay: 0.15, ease: 'power2.out',
-  scrollTrigger: { trigger: '#download', start: 'top 60%', toggleActions: 'play none none reverse' }
-});
-
-/* ----- Sleep Section Moon Float Enhancement ----- */
-gsap.to('#sleep .moon-container', {
-  y: -20,
-  rotation: 3,
-  scrollTrigger: {
-    trigger: '#sleep',
-    start: 'top bottom',
-    end: 'bottom top',
-    scrub: 2
-  }
-});
-
-/* ----- Growth Chart Line Drawing ----- */
-var chartPath = document.querySelector('.data-line');
-if (chartPath) {
-  var pathLength = chartPath.getTotalLength();
-  gsap.set(chartPath, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
-  gsap.to(chartPath, {
-    strokeDashoffset: 0,
-    duration: 2,
-    ease: 'power1.out',
-    scrollTrigger: {
-      trigger: '#health',
-      start: 'top 55%',
-      toggleActions: 'play none none reverse'
-    }
+/* Health chart line draw */
+var cl=document.getElementById('chartLine');
+if(cl){
+  var len=cl.getTotalLength();
+  gsap.set(cl,{strokeDasharray:len,strokeDashoffset:len});
+  gsap.to(cl,{
+    strokeDashoffset:0, duration:2, ease:'power1.out',
+    scrollTrigger:{trigger:'#health',start:'top 52%',toggleActions:'play none none reverse'}
   });
 }
 
-/* ----- AI Orb Entrance ----- */
-gsap.from('#aiOrb', {
-  scale: 0.5, opacity: 0, duration: 1.2, ease: 'power2.out',
-  scrollTrigger: { trigger: '#ai-advisor', start: 'top 60%', toggleActions: 'play none none reverse' }
+/* AI orb entrance */
+gsap.from('#aiOrb',{
+  scale:.45, opacity:0, duration:1.3, ease:'power2.out',
+  scrollTrigger:{trigger:'#ai',start:'top 58%',toggleActions:'play none none reverse'}
+});
+/* Chat bubbles */
+gsap.from('.chat-q',{x:-35,opacity:0,duration:.7,ease:'power2.out',
+  scrollTrigger:{trigger:'#ai',start:'top 48%',toggleActions:'play none none reverse'}});
+gsap.from('.chat-a',{x:35,opacity:0,duration:.7,delay:.4,ease:'power2.out',
+  scrollTrigger:{trigger:'#ai',start:'top 48%',toggleActions:'play none none reverse'}});
+
+/* Features grid stagger */
+gsap.from('#features .sc-center .anim',{
+  y:35, opacity:0, duration:.8, stagger:.1, ease:'power2.out',
+  scrollTrigger:{trigger:'#features',start:'top 62%',toggleActions:'play none none reverse'}
+});
+gsap.from('.f-card',{
+  y:35, opacity:0, duration:.5, stagger:.06, ease:'power2.out',
+  scrollTrigger:{trigger:'.f-grid',start:'top 68%',toggleActions:'play none none reverse'}
 });
 
-/* ----- Chat Bubble Stagger ----- */
-gsap.from('#ai-advisor .ai-chat-bubble', {
-  x: -30, opacity: 0, duration: 0.6, ease: 'power2.out',
-  scrollTrigger: { trigger: '#ai-advisor', start: 'top 50%', toggleActions: 'play none none reverse' }
+/* Free pillars stagger */
+gsap.from('#free .sc-center .anim',{
+  y:35, opacity:0, duration:.8, ease:'power2.out',
+  scrollTrigger:{trigger:'#free',start:'top 62%',toggleActions:'play none none reverse'}
 });
-gsap.from('#ai-advisor .ai-chat-response', {
-  x: 30, opacity: 0, duration: 0.6, delay: 0.4, ease: 'power2.out',
-  scrollTrigger: { trigger: '#ai-advisor', start: 'top 50%', toggleActions: 'play none none reverse' }
+gsap.from('.free-col',{
+  y:45, opacity:0, scale:.96, duration:.7, stagger:.1, ease:'power2.out',
+  scrollTrigger:{trigger:'.free-cols',start:'top 66%',toggleActions:'play none none reverse'}
 });
 
-/* ============================================
-   NAVIGATION VISIBILITY
-   ============================================ */
-(function() {
-  var nav = document.querySelector('nav');
-  var hero = document.getElementById('hero');
-  ScrollTrigger.create({
-    trigger: hero,
-    start: 'bottom 20%',
-    onEnter: function() { nav.classList.add('visible'); },
-    onLeaveBack: function() { nav.classList.remove('visible'); }
+/* Download */
+gsap.from('#download .phone',{
+  y:55, opacity:0, scale:.92, duration:1.2, ease:'power2.out',
+  scrollTrigger:{trigger:'#download',start:'top 58%',toggleActions:'play none none reverse'}
+});
+gsap.from('#download .dl-text .anim',{
+  y:35, opacity:0, duration:.9, stagger:.1, ease:'power2.out',
+  scrollTrigger:{trigger:'#download',start:'top 58%',toggleActions:'play none none reverse'}
+});
+
+/* ==========================================================================
+   NAV visibility
+   ========================================================================== */
+ScrollTrigger.create({
+  trigger:'#hero',
+  start:'bottom 20%',
+  onEnter:function(){document.querySelector('nav').classList.add('vis')},
+  onLeaveBack:function(){document.querySelector('nav').classList.remove('vis')}
+});
+
+/* ==========================================================================
+   LIVE TIMER
+   ========================================================================== */
+(function(){
+  var els=document.querySelectorAll('#t1,#t2,#t3');
+  var sec=83*60+7;
+  function pad(n){return n<10?'0'+n:n}
+  setInterval(function(){
+    sec++;
+    var h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+    var t=h+':'+pad(m)+':'+pad(s);
+    els.forEach(function(e){e.textContent=t});
+  },1000);
+})();
+
+/* ==========================================================================
+   NO-JS FALLBACK: if GSAP didn't load, show everything after 3s
+   ========================================================================== */
+setTimeout(function(){
+  document.querySelectorAll('.anim').forEach(function(el){
+    el.style.opacity='1'; el.style.transform='none';
   });
-})();
-
-/* ============================================
-   SLEEP TIMER ANIMATION
-   ============================================ */
-(function() {
-  var timerEls = document.querySelectorAll('.phone-card-timer, .sleep-demo-timer');
-  var base = 83 * 60 + 7; // 1:23:07
-  function pad(n) { return n < 10 ? '0' + n : n; }
-  setInterval(function() {
-    base++;
-    var h = Math.floor(base / 3600);
-    var m = Math.floor((base % 3600) / 60);
-    var s = base % 60;
-    var str = h + ':' + pad(m) + ':' + pad(s);
-    timerEls.forEach(function(el) { el.textContent = str; });
-  }, 1000);
-})();
+},3000);
 </script>
 </body>
 </html>
