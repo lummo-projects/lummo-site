@@ -1,443 +1,1263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lummo — Explore the World of Your Dreams</title>
-<meta name="description" content="Lummo is a dream journal and sleep tracker. Record your dreams, discover patterns, and explore lucid dreaming.">
-<meta property="og:title" content="Lummo — Dream Tracker">
-<meta property="og:description" content="Explore the world of your dreams. Record, analyze, and understand your nightly journeys.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://lummo-projects.github.io/lummo-site/">
-<meta name="theme-color" content="#0a0a1a">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23faf4e0'/><circle cx='62' cy='38' r='12' fill='%23ede4c0' opacity='.6'/><circle cx='40' cy='60' r='7' fill='%23ede4c0' opacity='.4'/></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
---bg:#0a0a1a;--bg2:#0f0c28;--bg3:#1a103d;--bg4:#1e1245;
---accent:#2d1b69;--cta:#8b5cf6;--cta2:#a78bfa;
---ta:#c4b5fd;--tm:#e2e8f0;--td:rgba(226,232,240,.4);
---serif:'Cormorant Garamond',Georgia,serif;
---sans:'Plus Jakarta Sans',-apple-system,sans-serif;
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--tm);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lummo — Baby & Child Care Tracker | Sleep, Feeding, Growth</title>
+  <meta name="description" content="Track your child's sleep, feeding, diapers, health, and growth in one app. Real-time sync, AI advisor, and detailed statistics. For parents of children 0-3 years.">
+  <meta name="keywords" content="baby tracker, child care, sleep tracker, feeding tracker, diaper tracker, growth chart, baby health, parenting app, Lummo">
+  <meta name="author" content="Lummo">
+  <meta name="robots" content="index, follow">
 
-/* ===== NAV ===== */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,26,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(139,92,246,.08);transform:translateY(-100%);transition:transform .5s cubic-bezier(.4,0,.2,1);pointer-events:none}
-nav.visible{transform:translateY(0);pointer-events:auto}
-.nav-logo{font-family:var(--serif);font-size:1.4rem;font-weight:300;color:var(--ta);letter-spacing:.08em}
-.nav-links{display:flex;gap:28px;list-style:none}
-.nav-links a{color:var(--td);font-size:.85rem;font-weight:400;letter-spacing:.03em;transition:color .3s}
-.nav-links a:hover{color:var(--tm)}
+  <!-- Open Graph -->
+  <meta property="og:title" content="Lummo — Baby & Child Care Tracker">
+  <meta property="og:description" content="Track sleep, feeding, diapers, health, and growth. Real-time sync between caregivers. AI-powered insights.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lummo-projects.github.io/lummo-site/">
+  <meta property="og:image" content="https://lummo-projects.github.io/lummo-site/og-image.png">
 
-/* ===== HERO ===== */
-#hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);overflow:hidden}
-.stars{position:absolute;inset:0;overflow:hidden}
-.star{position:absolute;border-radius:50%;background:#fff}
-.star{animation:twinkle var(--dur,5s) ease-in-out var(--del,0s) infinite}
-.star.bright{box-shadow:0 0 6px 1px rgba(255,255,255,.3)}
-@keyframes twinkle{0%,100%{opacity:.1}50%{opacity:.65}}
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lummo — Baby & Child Care Tracker">
+  <meta name="twitter:description" content="Track sleep, feeding, diapers, health, and growth in one app.">
 
-.moon-wrap{position:relative;z-index:2;margin-bottom:40px}
-.moon{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#faf4e0,#ede4c0 30%,#d4c994 55%,#bfb07a 80%,#a99860);box-shadow:0 0 60px 20px rgba(250,244,224,.12),0 0 120px 60px rgba(250,244,224,.06),0 0 250px 120px rgba(250,244,224,.025);position:relative}
-.moon::before{content:'';position:absolute;width:30%;height:30%;border-radius:50%;background:radial-gradient(circle,rgba(169,152,96,.3),transparent 70%);top:20%;left:55%}
-.moon::after{content:'';position:absolute;width:18%;height:18%;border-radius:50%;background:radial-gradient(circle,rgba(169,152,96,.25),transparent 70%);top:55%;left:28%}
-.crater{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(169,152,96,.2),transparent 70%)}
-.crater-1{width:14%;height:14%;top:42%;left:66%}
-.crater-2{width:9%;height:9%;top:68%;left:48%}
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><path d='M9.58679 5.36784C10.1911 3.59929 12.6348 3.54572 13.3513 5.20716L13.412 5.36886L14.2275 7.75388C14.4144 8.30086 14.7165 8.80138 15.1132 9.22171C15.51 9.64203 15.9924 9.97237 16.5277 10.1905L16.747 10.2723L19.132 11.0869C20.9006 11.6912 20.9541 14.1348 19.2937 14.8514L19.132 14.912L16.747 15.7276C16.1998 15.9143 15.6991 16.2163 15.2786 16.6131C14.8581 17.0099 14.5276 17.4923 14.3094 18.0277L14.2275 18.246L13.413 20.632C12.8086 22.4006 10.365 22.4541 9.64944 20.7937L9.58679 20.632L8.77223 18.247C8.58545 17.6998 8.28347 17.1991 7.88668 16.7786C7.48988 16.3581 7.0075 16.0276 6.47208 15.8094L6.25379 15.7276L3.86875 14.913C2.09917 14.3087 2.04561 11.865 3.70705 11.1495L3.86875 11.0869L6.25379 10.2723C6.80077 10.0854 7.3013 9.78337 7.72163 9.38658C8.14195 8.9898 8.4723 8.50748 8.69037 7.97217L8.77223 7.75388L9.58679 5.36784Z' fill='%233D38FF'/><path d='M18.8623 2.45595C19.0637 1.86643 19.8783 1.84857 20.1171 2.40239L20.1373 2.45629L20.4092 3.25129C20.4715 3.43362 20.5722 3.60046 20.7044 3.74057C20.8367 3.88068 20.9975 3.99079 21.1759 4.06348L21.249 4.09077L22.044 4.36229C22.6335 4.56373 22.6514 5.37828 22.0979 5.61712L22.044 5.63733L21.249 5.90918C21.0666 5.97144 20.8997 6.0721 20.7595 6.20437C20.6194 6.33663 20.5092 6.49743 20.4365 6.6759L20.4092 6.74866L20.1377 7.54401C19.9362 8.13352 19.1217 8.15138 18.8831 7.5979L18.8623 7.54401L18.5907 6.749C18.5285 6.56661 18.4278 6.3997 18.2956 6.25953C18.1633 6.11937 18.0025 6.0092 17.824 5.93647L17.7513 5.90918L16.9562 5.63767C16.3664 5.43622 16.3485 4.62167 16.9024 4.38317L16.9562 4.36229L17.7513 4.09077C17.9336 4.02847 18.1004 3.92779 18.2405 3.79553C18.3807 3.66327 18.4908 3.50249 18.5635 3.32406L18.5907 3.25129L18.8623 2.45595Z' fill='%233D38FF'/></svg>">
 
-.clouds{position:absolute;inset:0;overflow:hidden;z-index:1}
-.cloud{position:absolute;border-radius:50%;background:rgba(255,255,255,.035);filter:blur(40px)}
-.cloud-1{width:500px;height:90px;bottom:20%;animation:drift 70s linear infinite}
-.cloud-2{width:400px;height:70px;bottom:30%;animation:drift 90s linear infinite;animation-delay:-30s}
-.cloud-3{width:550px;height:55px;bottom:14%;animation:drift 100s linear infinite;animation-delay:-55s}
-@keyframes drift{0%{transform:translateX(-600px)}100%{transform:translateX(calc(100vw + 200px))}}
+  <!-- Fonts -->
+  <style>
+    @font-face {
+      font-family: 'Articulat CF';
+      src: url('fonts/ArticulatCF-Light.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Articulat CF';
+      src: url('fonts/ArticulatCF-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Articulat CF';
+      src: url('fonts/ArticulatCF-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Articulat CF';
+      src: url('fonts/ArticulatCF-DemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Articulat CF';
+      src: url('fonts/ArticulatCF-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
 
-.hero-content{z-index:2;text-align:center;padding:0 24px}
-.hero-title{font-family:var(--serif);font-size:clamp(3.2rem,8vw,6.5rem);font-weight:300;letter-spacing:.12em;color:var(--tm);line-height:1}
-.hero-sub{font-family:var(--sans);font-size:clamp(1rem,2.5vw,1.25rem);font-weight:300;color:var(--td);margin-top:16px;letter-spacing:.04em}
+    /* ===================== RESET & BASE ===================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      font-family: 'Articulat CF', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #000;
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    img { max-width: 100%; }
 
-.scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:2;animation:float-down 3s ease-in-out infinite;cursor:pointer;border:none;background:none;padding:8px}
-.scroll-hint svg{width:24px;height:24px;stroke:var(--ta);stroke-width:1.5;fill:none;opacity:.35;transition:opacity .3s}
-.scroll-hint:hover svg{opacity:.7}
-@keyframes float-down{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+    /* ===================== LAYOUT ===================== */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    section {
+      padding: 96px 0;
+    }
 
-/* ===== STORY ===== */
-#story{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px;background:linear-gradient(180deg,var(--bg2),var(--bg3))}
-.story-text{max-width:720px;text-align:center}
-.story-line{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.6rem);font-weight:300;line-height:1.5;color:var(--tm);opacity:.9}
-.story-line+.story-line{margin-top:36px;font-size:clamp(1.1rem,2.5vw,1.45rem);color:var(--ta);opacity:.7}
+    /* ===================== NAVBAR ===================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s;
+    }
+    .navbar.scrolled {
+      box-shadow: 0 1px 16px rgba(0,0,0,0.06);
+    }
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-weight: 400;
+      font-size: 15px;
+      color: #555;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: #3C38FF;
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      background: #3C38FF;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+    .nav-cta:hover {
+      background: #2D28EF;
+      transform: translateY(-1px);
+    }
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .mobile-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #000;
+      margin: 5px 0;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
 
-/* ===== FEATURES ===== */
-.feature{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;position:relative;overflow:hidden}
-.feature-inner{max-width:1060px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.feature-text h3{font-family:var(--serif);font-size:clamp(1.8rem,4vw,3rem);font-weight:300;color:var(--tm);margin-bottom:20px;letter-spacing:.02em}
-.feature-text p{font-size:clamp(.95rem,1.5vw,1.1rem);font-weight:300;line-height:1.85;color:rgba(226,232,240,.65)}
-.feature-vis{display:flex;align-items:center;justify-content:center}
+    /* ===================== HERO ===================== */
+    .hero {
+      padding: 140px 0 80px;
+      overflow: hidden;
+    }
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-content {
+      max-width: 520px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 8px;
+      background: #F0F0FF;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3C38FF;
+      margin-bottom: 24px;
+    }
+    .hero-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+    .hero h1 {
+      font-weight: 300;
+      font-size: 48px;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #000;
+      margin-bottom: 20px;
+    }
+    .hero h1 strong {
+      font-weight: 600;
+    }
+    .hero-sub {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-weight: 500;
+      font-size: 15px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .store-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .store-btn-apple {
+      background: #000;
+      color: #fff;
+    }
+    .store-btn-google {
+      background: #fff;
+      color: #000;
+      border: 1.5px solid #e0e0e0;
+    }
+    .store-btn svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .store-btn-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .store-btn-text small {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+    .store-btn-text span {
+      font-size: 16px;
+      font-weight: 600;
+    }
 
-#f-journal{background:linear-gradient(180deg,var(--bg3),var(--bg4))}
-#f-patterns{background:linear-gradient(180deg,var(--bg4),var(--accent))}
-#f-lucid{background:linear-gradient(180deg,var(--accent),var(--bg4))}
+    /* ===================== PHONE MOCKUP ===================== */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+    .phone-frame {
+      width: 280px;
+      height: 580px;
+      background: #121212;
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow: 0 40px 80px rgba(60,56,255,0.12), 0 16px 32px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #121212;
+      border-radius: 0 0 20px 20px;
+      z-index: 2;
+    }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #1A1A2E;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .phone-statusbar-right {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .phone-statusbar-right .battery {
+      width: 22px;
+      height: 10px;
+      border: 1.5px solid #fff;
+      border-radius: 2px;
+      position: relative;
+    }
+    .phone-statusbar-right .battery::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 2px;
+      width: 2px;
+      height: 4px;
+      background: #fff;
+      border-radius: 0 1px 1px 0;
+    }
+    .phone-statusbar-right .battery::before {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 14px;
+      height: 4px;
+      background: #27AE60;
+      border-radius: 1px;
+    }
+    .phone-header {
+      padding: 8px 20px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .phone-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .phone-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFB6C1, #FFA07A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .phone-child-name {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .phone-child-age {
+      color: #A3A5AA;
+      font-size: 12px;
+      font-weight: 400;
+    }
+    .phone-content {
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .phone-card {
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .phone-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .phone-card-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+    .phone-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .phone-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .phone-card-value {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+    .phone-card-right {
+      font-size: 20px;
+      font-weight: 300;
+      white-space: nowrap;
+    }
+    .phone-card-sleep {
+      background: rgba(60,56,255,0.12);
+      color: #fff;
+    }
+    .phone-card-sleep .phone-card-icon {
+      background: rgba(60,56,255,0.2);
+    }
+    .phone-card-feeding {
+      background: rgba(181,29,246,0.1);
+      color: #fff;
+    }
+    .phone-card-feeding .phone-card-icon {
+      background: rgba(181,29,246,0.18);
+    }
+    .phone-card-diaper {
+      background: rgba(172,188,54,0.1);
+      color: #fff;
+    }
+    .phone-card-diaper .phone-card-icon {
+      background: rgba(172,188,54,0.18);
+    }
+    .phone-card-health {
+      background: rgba(255,190,2,0.1);
+      color: #fff;
+    }
+    .phone-card-health .phone-card-icon {
+      background: rgba(255,190,2,0.18);
+    }
+    .phone-card-growth {
+      background: rgba(34,227,202,0.1);
+      color: #fff;
+    }
+    .phone-card-growth .phone-card-icon {
+      background: rgba(34,227,202,0.18);
+    }
+    .phone-sleep-timer {
+      margin-top: 4px;
+      padding: 14px;
+      background: linear-gradient(135deg, #3C38FF, #1D2475);
+      border-radius: 16px;
+      color: #fff;
+      text-align: center;
+    }
+    .phone-sleep-timer-label {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    .phone-sleep-timer-value {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .phone-sleep-timer-btn {
+      margin-top: 10px;
+      display: inline-block;
+      padding: 6px 24px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .phone-navbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(18,18,18,0.95);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 22px;
+    }
+    .phone-navbar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      opacity: 0.5;
+    }
+    .phone-navbar-item.active {
+      opacity: 1;
+    }
+    .phone-navbar-item svg {
+      width: 18px;
+      height: 18px;
+    }
+    .phone-navbar-item span {
+      font-size: 9px;
+      color: #fff;
+      font-weight: 400;
+    }
 
-/* Dream Cards */
-.dream-cards{position:relative;width:280px;height:320px}
-.dream-card{position:absolute;width:190px;padding:18px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.12);border-radius:14px;backdrop-filter:blur(8px)}
-.dream-card:nth-child(1){top:0;left:0;transform:rotate(-5deg)}
-.dream-card:nth-child(2){top:30px;left:50px;transform:rotate(3deg);z-index:1}
-.dream-card:nth-child(3){top:70px;left:20px;transform:rotate(-1.5deg);z-index:2}
-.ml{height:5px;background:rgba(226,232,240,.1);border-radius:3px;margin-bottom:7px}
-.ml.s{width:60%}.ml.m{width:78%}
-.mt{display:inline-block;padding:3px 9px;border-radius:6px;background:rgba(139,92,246,.12);color:var(--ta);font-size:.6rem;margin-top:6px;margin-right:3px;letter-spacing:.03em}
+    /* Floating decorative elements */
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(60,56,255,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
 
-/* Sleep Chart */
-.sleep-chart{display:flex;align-items:flex-end;gap:10px;height:220px;padding-bottom:28px;position:relative}
-.sleep-chart::after{content:'';position:absolute;bottom:26px;left:0;right:0;height:1px;background:rgba(226,232,240,.08)}
-.bar{width:24px;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--cta),rgba(139,92,246,.15));position:relative;transition:height 1.2s cubic-bezier(.4,0,.2,1)}
-.bar span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--td);white-space:nowrap}
+    /* ===================== FEATURES ===================== */
+    .features {
+      background: #FAFAFA;
+    }
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #3C38FF;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 36px;
+      font-weight: 300;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-title strong {
+      font-weight: 600;
+    }
+    .section-desc {
+      font-size: 17px;
+      color: #555;
+      max-width: 520px;
+      margin-bottom: 56px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+    .feature-icon-sleep { background: #E8E8FF; }
+    .feature-icon-feeding { background: #F3E5FA; }
+    .feature-icon-diaper { background: #F0F3D9; }
+    .feature-icon-health { background: #FFF4D9; }
+    .feature-icon-growth { background: #D9F8F3; }
+    .feature-icon-ai { background: #F0F0FF; }
+    .feature-icon-stats { background: #E5F1FA; }
+    .feature-icon-sync { background: #E8F5E9; }
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.5;
+    }
 
-/* Lucid Rings */
-.lucid-vis{position:relative;width:280px;height:280px;display:flex;align-items:center;justify-content:center}
-.ring{position:absolute;border-radius:50%;border:1px solid rgba(139,92,246,.2);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse-r 5s ease-in-out infinite}
-.r1{width:70px;height:70px;border-color:rgba(139,92,246,.35)}
-.r2{width:120px;height:120px;animation-delay:.5s}
-.r3{width:175px;height:175px;animation-delay:1s}
-.r4{width:230px;height:230px;animation-delay:1.5s;border-color:rgba(139,92,246,.1)}
-.glow-c{position:absolute;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.6),transparent 70%);box-shadow:0 0 40px 12px rgba(139,92,246,.15);top:50%;left:50%;transform:translate(-50%,-50%)}
-@keyframes pulse-r{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.25}50%{transform:translate(-50%,-50%) scale(1.06);opacity:.65}}
+    /* ===================== HOW IT WORKS ===================== */
+    .how-it-works .container {
+      text-align: center;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      margin-top: 56px;
+      text-align: center;
+    }
+    .step {
+      position: relative;
+    }
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #3C38FF;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .step h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .step p {
+      font-size: 15px;
+      color: #666;
+      max-width: 280px;
+      margin: 0 auto;
+    }
 
-/* ===== QUOTE ===== */
-#quote{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:100px 24px;background:linear-gradient(180deg,var(--bg4),var(--bg2))}
-.quote-wrap{max-width:780px;text-align:center}
-blockquote{font-family:var(--serif);font-size:clamp(1.5rem,4vw,2.6rem);font-weight:300;font-style:italic;color:var(--ta);line-height:1.5}
-blockquote::before{content:'\201C';display:block;font-size:4rem;color:rgba(139,92,246,.2);line-height:1;margin-bottom:8px}
-cite{display:block;margin-top:28px;font-family:var(--sans);font-size:.85rem;font-style:normal;color:var(--td);letter-spacing:.06em}
+    /* ===================== NUMBERS ===================== */
+    .numbers {
+      background: linear-gradient(135deg, #3C38FF, #1D2475);
+      color: #fff;
+    }
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    .number-item {
+      padding: 20px;
+    }
+    .number-value {
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+    .number-label {
+      font-size: 15px;
+      font-weight: 400;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
 
-/* ===== DOWNLOAD ===== */
-#download{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
-.dl-inner{display:flex;align-items:center;gap:72px;max-width:880px}
+    /* ===================== DOWNLOAD ===================== */
+    .download {
+      text-align: center;
+      background: #FAFAFA;
+    }
+    .download .section-title {
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .download .section-desc {
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .download-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
 
-/* Phone Mockup */
-.phone{width:210px;height:420px;border-radius:30px;border:2px solid rgba(139,92,246,.18);background:linear-gradient(180deg,var(--bg3),var(--bg));position:relative;overflow:hidden;box-shadow:0 0 50px rgba(139,92,246,.07),inset 0 0 30px rgba(0,0,0,.4);flex-shrink:0}
-.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:80px;height:20px;background:var(--bg);border-radius:0 0 12px 12px;z-index:2}
-.phone-sc{padding:32px 12px 12px;height:100%}
-.phone-hdr{font-family:var(--serif);font-size:.7rem;color:var(--ta);margin-bottom:12px;letter-spacing:.03em}
-.phone-entry{background:rgba(139,92,246,.05);border-left:2px solid rgba(139,92,246,.25);border-radius:0 8px 8px 0;padding:9px 10px;margin-bottom:8px}
-.pe-date{font-size:.5rem;color:var(--td);margin-bottom:5px}
-.phone-fab{position:absolute;bottom:20px;right:16px;width:32px;height:32px;border-radius:50%;background:var(--cta);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(139,92,246,.35);z-index:2}
-.phone-fab::before{content:'+';color:#fff;font-size:1.1rem;font-weight:300;line-height:1}
+    /* ===================== FOOTER ===================== */
+    .footer {
+      background: #000;
+      color: #fff;
+      padding: 48px 0;
+    }
+    .footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .footer-logo svg {
+      width: 24px;
+      height: 24px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: #999;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #fff;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: #666;
+      width: 100%;
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
 
-.dl-text h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;margin-bottom:14px}
-.dl-text p{font-weight:300;color:rgba(226,232,240,.55);margin-bottom:28px;line-height:1.7;font-size:.95rem}
-.store-btns{display:flex;gap:14px;flex-wrap:wrap}
-.store-btn{display:inline-flex;align-items:center;gap:12px;padding:12px 22px;border:1px solid rgba(139,92,246,.2);border-radius:13px;background:rgba(139,92,246,.06);transition:all .35s ease;cursor:pointer}
-.store-btn:hover{background:rgba(139,92,246,.14);border-color:rgba(139,92,246,.35);transform:translateY(-2px)}
-.store-btn svg{width:20px;height:20px;fill:var(--ta);flex-shrink:0}
-.store-info{display:flex;flex-direction:column}
-.store-info .soon{font-size:.6rem;color:var(--td);letter-spacing:.04em;text-transform:uppercase}
-.store-info .name{font-size:.9rem;font-weight:500;color:var(--tm)}
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 900px) {
+      .hero .container {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        text-align: center;
+      }
+      .hero-content {
+        max-width: 100%;
+      }
+      .hero-sub {
+        max-width: 100%;
+      }
+      .hero-ctas {
+        justify-content: center;
+      }
+      .hero h1 {
+        font-size: 36px;
+      }
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+      .numbers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .nav-links {
+        display: none;
+      }
+      .mobile-toggle {
+        display: block;
+      }
+      .section-title {
+        font-size: 30px;
+      }
+    }
+    @media (max-width: 600px) {
+      section {
+        padding: 64px 0;
+      }
+      .hero {
+        padding: 120px 0 48px;
+      }
+      .hero h1 {
+        font-size: 30px;
+      }
+      .hero-sub {
+        font-size: 16px;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .numbers-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .number-value {
+        font-size: 32px;
+      }
+      .phone-frame {
+        width: 240px;
+        height: 500px;
+      }
+      .store-btn {
+        padding: 12px 20px;
+      }
+      .footer .container {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+      }
+    }
 
-/* ===== FOOTER ===== */
-footer{padding:40px 24px;text-align:center;background:var(--bg);border-top:1px solid rgba(139,92,246,.05)}
-.f-links{display:flex;gap:24px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
-.f-links a{color:var(--td);font-size:.8rem;transition:color .3s}
-.f-links a:hover{color:var(--ta)}
-.f-copy{font-size:.7rem;color:rgba(226,232,240,.18)}
+    /* ===================== MOBILE NAV ===================== */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(20px);
+      padding: 24px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      z-index: 99;
+    }
+    .mobile-nav.active {
+      display: block;
+    }
+    .mobile-nav a {
+      display: block;
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: 400;
+      color: #333;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .mobile-nav a:last-child {
+      border: none;
+    }
 
-/* ===== REVEALS ===== */
-.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.25,.46,.45,.94),transform .9s cubic-bezier(.25,.46,.45,.94)}
-.rv.vis{opacity:1;transform:translateY(0)}
-.rv-d1{transition-delay:.12s}
-.rv-d2{transition-delay:.24s}
-.rv-d3{transition-delay:.36s}
-
-/* ===== MOBILE ===== */
-@media(max-width:768px){
-  nav{padding:14px 20px}
-  .nav-links{display:none}
-  .feature-inner{grid-template-columns:1fr;gap:36px;text-align:center}
-  .feature-vis{order:-1}
-  .dream-cards{width:240px;height:280px;margin:0 auto}
-  .dream-card{width:160px;padding:14px}
-  .sleep-chart{justify-content:center}
-  .lucid-vis{width:220px;height:220px;margin:0 auto}
-  .r1{width:55px;height:55px}.r2{width:95px;height:95px}.r3{width:140px;height:140px}.r4{width:185px;height:185px}
-  .dl-inner{flex-direction:column;text-align:center}
-  .dl-text{text-align:center}
-  .store-btns{justify-content:center}
-  .phone{width:180px;height:360px;border-radius:26px}
-  .notch{width:65px;height:16px;border-radius:0 0 10px 10px}
-  .phone-sc{padding:26px 10px 10px}
-  blockquote::before{font-size:3rem}
-}
-@media(min-width:1200px){
-  .feature-inner{gap:100px}
-}
-</style>
+    /* ===================== ANIMATIONS ===================== */
+    @media (prefers-reduced-motion: no-preference) {
+      .feature-card, .step, .number-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .feature-card.visible, .step.visible, .number-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .feature-card, .step, .number-item {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Nav (hidden until scroll) -->
-<nav>
-  <a href="#hero" class="nav-logo">Lummo</a>
-  <ul class="nav-links">
-    <li><a href="#story">Story</a></li>
-    <li><a href="#f-journal">Features</a></li>
-    <li><a href="#download">Download</a></li>
-  </ul>
-</nav>
-
-<!-- ===== HERO ===== -->
-<section id="hero">
-  <div class="stars" id="stars"></div>
-  <div class="clouds">
-    <div class="cloud cloud-1"></div>
-    <div class="cloud cloud-2"></div>
-    <div class="cloud cloud-3"></div>
-  </div>
-  <div class="moon-wrap">
-    <div class="moon">
-      <div class="crater crater-1"></div>
-      <div class="crater crater-2"></div>
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.587 5.368C10.191 3.599 12.635 3.546 13.351 5.207L13.412 5.369L14.228 7.754C14.414 8.301 14.717 8.801 15.113 9.222C15.51 9.642 15.992 9.972 16.528 10.191L16.747 10.272L19.132 11.087C20.901 11.691 20.954 14.135 19.294 14.851L19.132 14.912L16.747 15.728C16.2 15.914 15.699 16.216 15.279 16.613C14.858 17.01 14.528 17.492 14.309 18.028L14.228 18.246L13.413 20.632C12.809 22.401 10.365 22.454 9.649 20.794L9.587 20.632L8.772 18.247C8.585 17.7 8.283 17.199 7.887 16.779C7.49 16.358 7.008 16.028 6.472 15.809L6.254 15.728L3.869 14.913C2.099 14.309 2.046 11.865 3.707 11.15L3.869 11.087L6.254 10.272C6.801 10.085 7.301 9.783 7.722 9.387C8.142 8.99 8.472 8.507 8.69 7.972L8.772 7.754L9.587 5.368Z" fill="#3D38FF"/>
+          <path d="M18.862 2.456C19.064 1.866 19.878 1.849 20.117 2.402L20.137 2.456L20.409 3.251C20.472 3.434 20.572 3.6 20.704 3.741C20.837 3.881 20.998 3.991 21.176 4.063L21.249 4.091L22.044 4.362C22.634 4.564 22.651 5.378 22.098 5.617L22.044 5.637L21.249 5.909C21.067 5.971 20.9 6.072 20.76 6.204C20.619 6.337 20.509 6.497 20.437 6.676L20.409 6.749L20.138 7.544C19.936 8.134 19.122 8.151 18.883 7.598L18.862 7.544L18.591 6.749C18.529 6.567 18.428 6.4 18.296 6.26C18.163 6.119 18.003 6.009 17.824 5.936L17.751 5.909L16.956 5.638C16.366 5.436 16.349 4.622 16.902 4.383L16.956 4.362L17.751 4.091C17.934 4.028 18.1 3.928 18.241 3.796C18.381 3.663 18.491 3.502 18.564 3.324L18.591 3.251L18.862 2.456Z" fill="#3D38FF"/>
+        </svg>
+        Lummo
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#download">Download</a></li>
+      </ul>
+      <a href="#download" class="nav-cta">Get the app</a>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
-  </div>
-  <div class="hero-content">
-    <h1 class="hero-title">Lummo</h1>
-    <p class="hero-sub">Explore the world of your dreams</p>
-  </div>
-  <button class="scroll-hint" aria-label="Scroll down" onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">
-    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-  </button>
-</section>
+  </nav>
 
-<!-- ===== STORY ===== -->
-<section id="story">
-  <div class="story-text">
-    <p class="story-line rv">Every night, you travel to another world.<br>Lummo helps you remember the journey.</p>
-    <p class="story-line rv rv-d1">Your dreams hold meaning. We help you find it.</p>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#features" onclick="closeMobileNav()">Features</a>
+    <a href="#how-it-works" onclick="closeMobileNav()">How it works</a>
+    <a href="#download" onclick="closeMobileNav()">Download</a>
   </div>
-</section>
 
-<!-- ===== FEATURE: JOURNAL ===== -->
-<section class="feature" id="f-journal">
-  <div class="feature-inner">
-    <div class="feature-text rv">
-      <h3>Your dream journal</h3>
-      <p>Capture every detail before it fades. Record your dreams the moment you wake — tag emotions, mark lucidity, and build a library of your nightly adventures.</p>
-    </div>
-    <div class="feature-vis rv rv-d2">
-      <div class="dream-cards">
-        <div class="dream-card">
-          <div class="ml"></div>
-          <div class="ml m"></div>
-          <div class="ml s"></div>
-          <span class="mt">flying</span>
-          <span class="mt">vivid</span>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 0C13.97 0 18 4.03 18 9C18 13.97 13.97 18 9 18C4.03 18 0 13.97 0 9C0 4.03 4.03 0 9 0ZM9.47 4.98C9.05 3.99 7.59 4.02 7.23 5.08L6.74 6.5L6.69 6.63C6.56 6.95 6.36 7.24 6.11 7.48C5.86 7.71 5.57 7.89 5.24 8L3.82 8.49L3.72 8.53C2.73 8.95 2.76 10.41 3.82 10.77L5.24 11.26L5.37 11.31C5.69 11.44 5.98 11.63 6.21 11.89C6.45 12.14 6.63 12.44 6.74 12.76L7.23 14.18L7.26 14.28C7.69 15.27 9.15 15.24 9.51 14.18L10 12.76L10.04 12.63C10.17 12.31 10.37 12.02 10.62 11.79C10.87 11.55 11.17 11.37 11.5 11.26L12.92 10.77L13.02 10.74C14.01 10.31 13.98 8.85 12.92 8.49L11.5 8L11.37 7.96C11.05 7.83 10.76 7.63 10.52 7.38C10.29 7.13 10.11 6.83 10 6.5L9.51 5.08L9.47 4.98ZM13.19 3C13.06 3 12.94 3.04 12.84 3.11C12.74 3.19 12.66 3.29 12.62 3.41L12.41 4.03L11.79 4.24L11.72 4.27C11.61 4.32 11.52 4.4 11.46 4.51C11.4 4.61 11.38 4.73 11.38 4.85C11.39 4.97 11.43 5.08 11.51 5.17C11.58 5.27 11.68 5.34 11.79 5.38L12.41 5.59L12.62 6.21L12.65 6.28C12.7 6.39 12.78 6.48 12.89 6.54C12.99 6.6 13.11 6.62 13.23 6.62C13.35 6.61 13.46 6.57 13.56 6.49C13.65 6.42 13.72 6.32 13.76 6.21L13.97 5.59L14.59 5.38L14.66 5.35C14.77 5.3 14.86 5.21 14.92 5.11C14.98 5.01 15.01 4.89 15 4.77C14.99 4.65 14.95 4.54 14.88 4.44C14.8 4.35 14.7 4.28 14.59 4.24L13.97 4.03L13.76 3.41L13.73 3.34C13.68 3.24 13.61 3.15 13.51 3.09C13.41 3.03 13.3 3 13.19 3Z" fill="#3D38FF"/></svg>
+          iOS &amp; Android
         </div>
-        <div class="dream-card">
-          <div class="ml"></div>
-          <div class="ml"></div>
-          <div class="ml s"></div>
-          <span class="mt">ocean</span>
+        <h1>Track your child's sleep, feeding, and growth — <strong>in one app</strong></h1>
+        <p class="hero-sub">Log sleep, feeding, diapers, temperature, medications, and milestones. Sync in real time between both parents. See patterns through detailed charts.</p>
+        <div class="hero-ctas">
+          <a href="#" class="store-btn store-btn-apple" aria-label="Download on the App Store">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.05 12.54c-.02-2.23 1.83-3.31 1.91-3.36-1.04-1.52-2.66-1.73-3.24-1.75-1.37-.14-2.7.82-3.4.82-.71 0-1.79-.8-2.95-.78-1.5.02-2.91.89-3.68 2.24-1.59 2.75-.41 6.8 1.12 9.03.76 1.08 1.65 2.3 2.82 2.26 1.14-.04 1.57-.73 2.95-.73 1.37 0 1.76.73 2.95.71 1.22-.02 1.99-1.09 2.73-2.18.88-1.25 1.23-2.47 1.25-2.53-.03-.01-2.39-.91-2.41-3.63h-.05zM14.83 5.54c.6-.75 1.01-1.78.9-2.82-.87.04-1.95.6-2.58 1.33-.56.65-1.06 1.71-.93 2.72.97.07 1.97-.5 2.56-1.23h.05z" fill="white"/></svg>
+            <div class="store-btn-text">
+              <small>Download on the</small>
+              <span>App Store</span>
+            </div>
+          </a>
+          <a href="#" class="store-btn store-btn-google" aria-label="Get it on Google Play">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3.61 1.81L13.39 12 3.61 22.19c-.25-.15-.41-.43-.41-.75V2.56c0-.32.16-.6.41-.75z" fill="#4285F4"/><path d="M16.69 8.71L5.15.56c-.36-.23-.76-.36-1.17-.36-.08 0-.16.01-.24.02L13.39 12l3.3-3.29z" fill="#EA4335"/><path d="M3.74 23.78c.08.01.16.02.24.02.41 0 .81-.13 1.17-.36l11.54-8.15-3.3-3.29-9.65 11.78z" fill="#34A853"/><path d="M20.15 10.37l-3.46-1.66-3.3 3.29 3.3 3.29 3.46-1.66c.64-.36 1.05-1.04 1.05-1.63s-.41-1.27-1.05-1.63z" fill="#FBBC05"/></svg>
+            <div class="store-btn-text">
+              <small>Get it on</small>
+              <span>Google Play</span>
+            </div>
+          </a>
         </div>
-        <div class="dream-card">
-          <div class="ml m"></div>
-          <div class="ml"></div>
-          <div class="ml m"></div>
-          <div class="ml s"></div>
-          <span class="mt">lucid</span>
-          <span class="mt">recurring</span>
+      </div>
+
+      <div class="hero-visual">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-statusbar">
+              <span>9:41</span>
+              <div class="phone-statusbar-right">
+                <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect x="0" y="7" width="3" height="5" rx="1" fill="white" opacity="0.4"/><rect x="4" y="4" width="3" height="8" rx="1" fill="white" opacity="0.6"/><rect x="8" y="1" width="3" height="11" rx="1" fill="white"/></svg>
+                <div class="battery"></div>
+              </div>
+            </div>
+            <div class="phone-header">
+              <div class="phone-header-left">
+                <div class="phone-avatar">E</div>
+                <div>
+                  <div class="phone-child-name">Emma</div>
+                  <div class="phone-child-age">8 months, 12 days</div>
+                </div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9.587 5.368C10.191 3.599 12.635 3.546 13.351 5.207L13.412 5.369L14.228 7.754C14.414 8.301 14.717 8.801 15.113 9.222C15.51 9.642 15.992 9.972 16.528 10.191L16.747 10.272L19.132 11.087C20.901 11.691 20.954 14.135 19.294 14.851L19.132 14.912L16.747 15.728C16.2 15.914 15.699 16.216 15.279 16.613C14.858 17.01 14.528 17.492 14.309 18.028L14.228 18.246L13.413 20.632C12.809 22.401 10.365 22.454 9.649 20.794L9.587 20.632L8.772 18.247C8.585 17.7 8.283 17.199 7.887 16.779C7.49 16.358 7.008 16.028 6.472 15.809L6.254 15.728L3.869 14.913C2.099 14.309 2.046 11.865 3.707 11.15L3.869 11.087L6.254 10.272C6.801 10.085 7.301 9.783 7.722 9.387C8.142 8.99 8.472 8.507 8.69 7.972L8.772 7.754L9.587 5.368Z" fill="#3D38FF"/><path d="M18.862 2.456C19.064 1.866 19.878 1.849 20.117 2.402L20.137 2.456L20.409 3.251C20.472 3.434 20.572 3.6 20.704 3.741C20.837 3.881 20.998 3.991 21.176 4.063L21.249 4.091L22.044 4.362C22.634 4.564 22.651 5.378 22.098 5.617L22.044 5.637L21.249 5.909C21.067 5.971 20.9 6.072 20.76 6.204C20.619 6.337 20.509 6.497 20.437 6.676L20.409 6.749L20.138 7.544C19.936 8.134 19.122 8.151 18.883 7.598L18.862 7.544L18.591 6.749C18.529 6.567 18.428 6.4 18.296 6.26C18.163 6.119 18.003 6.009 17.824 5.936L17.751 5.909L16.956 5.638C16.366 5.436 16.349 4.622 16.902 4.383L16.956 4.362L17.751 4.091C17.934 4.028 18.1 3.928 18.241 3.796C18.381 3.663 18.491 3.502 18.564 3.324L18.591 3.251L18.862 2.456Z" fill="#3D38FF"/></svg>
+            </div>
+
+            <!-- Sleep timer active -->
+            <div class="phone-content">
+              <div class="phone-sleep-timer">
+                <div class="phone-sleep-timer-label">Sleep in progress</div>
+                <div class="phone-sleep-timer-value">01:23:47</div>
+                <div class="phone-sleep-timer-btn">Stop</div>
+              </div>
+
+              <!-- Recent entries -->
+              <div class="phone-card phone-card-feeding">
+                <div class="phone-card-icon">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 1.67V7.5C2.5 8.42 3.25 9.17 4.17 9.17H7.5C7.94 9.17 8.37 8.99 8.68 8.68C8.99 8.37 9.17 7.94 9.17 7.5V1.67" stroke="#B51DF6" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.83 1.67V18.33" stroke="#B51DF6" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 12.5V1.67C16.39 1.67 15.33 2.11 14.55 2.89C13.77 3.67 13.33 4.73 13.33 5.83V10.83C13.33 11.75 14.08 12.5 15 12.5H17.5ZM17.5 12.5V18.33" stroke="#B51DF6" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Breast, Left</div>
+                  <div class="phone-card-value">14 min ago</div>
+                </div>
+                <div class="phone-card-right" style="font-size:15px;font-weight:500;">18 min</div>
+              </div>
+
+              <div class="phone-card phone-card-diaper">
+                <div class="phone-card-icon">
+                  <svg width="20" height="17" viewBox="0 0 29 24" fill="none"><path d="M1 5.98C1 5.12 1 4.68 1.07 4.32C1.22 3.51 1.61 2.77 2.19 2.19C2.77 1.6 3.51 1.21 4.32 1.07C4.68 1 5.11 1 5.98 1H23.01C23.88 1 24.32 1 24.68 1.07C25.49 1.22 26.23 1.61 26.81 2.19C27.39 2.77 27.78 3.51 27.93 4.32C28 4.68 28 5.12 28 5.98V9.1C28 16.56 21.95 22.6 14.5 22.6C7.04 22.6 1 16.56 1 9.1V5.98Z" stroke="#ACBC36" stroke-width="2" stroke-linejoin="round"/><path d="M22.6 6.4H28M1 6.4H6.4M17.88 21.92V20.57C17.88 18.07 18.87 15.67 20.64 13.89C22.42 12.12 24.82 11.12 27.33 11.12M11.13 21.92V20.57C11.13 18.07 10.13 15.67 8.36 13.89C6.58 12.12 4.18 11.12 1.68 11.12" stroke="#ACBC36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Diaper change</div>
+                  <div class="phone-card-value">42 min ago</div>
+                </div>
+                <div class="phone-card-right" style="font-size:13px;font-weight:400;">Wet</div>
+              </div>
+
+              <div class="phone-card phone-card-growth">
+                <div class="phone-card-icon">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.75 12.75C17.94 12.94 18.08 13.16 18.19 13.4C18.29 13.64 18.34 13.9 18.34 14.17C18.34 14.43 18.29 14.69 18.19 14.93C18.08 15.18 17.94 15.4 17.75 15.58L15.58 17.75C15.4 17.94 15.18 18.08 14.93 18.19C14.69 18.29 14.43 18.34 14.17 18.34C13.9 18.34 13.64 18.29 13.4 18.19C13.16 18.08 12.94 17.94 12.75 17.75L2.25 7.25C1.88 6.87 1.67 6.36 1.67 5.83C1.67 5.3 1.88 4.79 2.25 4.42L4.42 2.25C4.79 1.88 5.3 1.67 5.83 1.67C6.36 1.67 6.87 1.88 7.25 2.25L17.75 12.75Z" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.08 10.42L13.75 8.75" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.58 7.92L11.25 6.25" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.08 5.42L8.75 3.75" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.58 12.92L16.25 11.25" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Weight</div>
+                  <div class="phone-card-value">Today</div>
+                </div>
+                <div class="phone-card-right" style="font-size:15px;font-weight:500;">8.2 kg</div>
+              </div>
+
+              <div class="phone-card phone-card-health">
+                <div class="phone-card-icon">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8.75 17.08L17.08 8.75C17.47 8.37 17.78 7.91 17.99 7.41C18.21 6.91 18.32 6.37 18.32 5.82C18.32 5.28 18.22 4.74 18.01 4.23C17.8 3.73 17.5 3.27 17.11 2.89C16.73 2.5 16.27 2.2 15.76 1.99C15.26 1.78 14.72 1.68 14.18 1.68C13.63 1.68 13.09 1.79 12.59 2C12.09 2.22 11.63 2.53 11.25 2.92L2.92 11.25C2.53 11.63 2.22 12.09 2 12.59C1.79 13.09 1.68 13.63 1.68 14.18C1.68 14.72 1.78 15.26 1.99 15.76C2.2 16.27 2.5 16.73 2.89 17.11C3.27 17.5 3.73 17.8 4.23 18.01C4.74 18.22 5.28 18.32 5.82 18.32C6.37 18.32 6.91 18.21 7.41 17.99C7.91 17.78 8.37 17.47 8.75 17.08Z" stroke="#FFBE02" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.08 7.08L12.92 12.92" stroke="#FFBE02" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Temperature</div>
+                  <div class="phone-card-value">8:15 AM</div>
+                </div>
+                <div class="phone-card-right" style="font-size:15px;font-weight:500;">36.6°</div>
+              </div>
+            </div>
+
+            <!-- Bottom nav -->
+            <div class="phone-navbar">
+              <div class="phone-navbar-item active">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 0C13.97 0 18 4.03 18 9C18 13.97 13.97 18 9 18C4.03 18 0 13.97 0 9C0 4.03 4.03 0 9 0ZM9.63 2.5C9.26 2.21 8.74 2.21 8.37 2.5L4.37 5.72C4.14 5.91 4 6.2 4 6.5V13C4 13.55 4.45 14 5 14H6.71C7.26 14 7.71 13.55 7.71 13V10.15C7.71 9.6 8.16 9.15 8.71 9.15H9.29C9.84 9.15 10.29 9.6 10.29 10.15V13C10.29 13.55 10.74 14 11.29 14H13C13.55 14 14 13.55 14 13V6.5C14 6.2 13.86 5.91 13.63 5.72L9.63 2.5Z" fill="white"/></svg>
+                <span>Home</span>
+              </div>
+              <div class="phone-navbar-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 0C13.97 0 18 4.03 18 9C18 13.97 13.97 18 9 18C4.03 18 0 13.97 0 9C0 4.03 4.03 0 9 0ZM5 9C4.45 9 4 9.45 4 10V13C4 13.55 4.45 14 5 14C5.55 14 6 13.55 6 13V10C6 9.45 5.55 9 5 9ZM9 4C8.45 4 8 4.45 8 5V13C8 13.55 8.45 14 9 14C9.55 14 10 13.55 10 13V5C10 4.45 9.55 4 9 4ZM13 7C12.45 7 12 7.45 12 8V13C12 13.55 12.45 14 13 14C13.55 14 14 13.55 14 13V8C14 7.45 13.55 7 13 7Z" fill="white"/></svg>
+                <span>Stats</span>
+              </div>
+              <div class="phone-navbar-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 0C13.97 0 18 4.03 18 9C18 13.97 13.97 18 9 18C4.03 18 0 13.97 0 9C0 4.03 4.03 0 9 0ZM9.47 4.98C9.05 3.99 7.59 4.02 7.23 5.08L6.74 6.5L6.69 6.63C6.56 6.95 6.36 7.24 6.11 7.48C5.86 7.71 5.57 7.89 5.24 8L3.82 8.49L3.72 8.53C2.73 8.95 2.76 10.41 3.82 10.77L5.24 11.26L5.37 11.31C5.69 11.44 5.98 11.63 6.21 11.89C6.45 12.14 6.63 12.44 6.74 12.76L7.23 14.18L7.26 14.28C7.69 15.27 9.15 15.24 9.51 14.18L10 12.76L10.04 12.63C10.17 12.31 10.37 12.02 10.62 11.79C10.87 11.55 11.17 11.37 11.5 11.26L12.92 10.77L13.02 10.74C14.01 10.31 13.98 8.85 12.92 8.49L11.5 8L11.37 7.96C11.05 7.83 10.76 7.63 10.52 7.38C10.29 7.13 10.11 6.83 10 6.5L9.51 5.08L9.47 4.98ZM13.19 3C13.06 3 12.94 3.04 12.84 3.11C12.74 3.19 12.66 3.29 12.62 3.41L12.41 4.03L11.79 4.24L11.72 4.27C11.61 4.32 11.52 4.4 11.46 4.51C11.4 4.61 11.38 4.73 11.38 4.85C11.39 4.97 11.43 5.08 11.51 5.17C11.58 5.27 11.68 5.34 11.79 5.38L12.41 5.59L12.62 6.21L12.65 6.28C12.7 6.39 12.78 6.48 12.89 6.54C12.99 6.6 13.11 6.62 13.23 6.62C13.35 6.61 13.46 6.57 13.56 6.49C13.65 6.42 13.72 6.32 13.76 6.21L13.97 5.59L14.59 5.38L14.66 5.35C14.77 5.3 14.86 5.21 14.92 5.11C14.98 5.01 15.01 4.89 15 4.77C14.99 4.65 14.95 4.54 14.88 4.44C14.8 4.35 14.7 4.28 14.59 4.24L13.97 4.03L13.76 3.41L13.73 3.34C13.68 3.24 13.61 3.15 13.51 3.09C13.41 3.03 13.3 3 13.19 3Z" fill="white"/></svg>
+                <span>AI</span>
+              </div>
+              <div class="phone-navbar-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 0C13.97 0 18 4.03 18 9C18 13.97 13.97 18 9 18C4.03 18 0 13.97 0 9C0 4.03 4.03 0 9 0Z" fill="white" opacity="0.5"/><path d="M9 9C10.66 9 12 7.66 12 6C12 4.34 10.66 3 9 3C7.34 3 6 4.34 6 6C6 7.66 7.34 9 9 9Z" stroke="#1A1A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 15C15 12.79 12.31 11 9 11C5.69 11 3 12.79 3 15" stroke="#1A1A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Child</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== FEATURE: PATTERNS ===== -->
-<section class="feature" id="f-patterns">
-  <div class="feature-inner">
-    <div class="feature-vis rv">
-      <div class="sleep-chart">
-        <div class="bar" style="--h:55%"><span>Mon</span></div>
-        <div class="bar" style="--h:78%"><span>Tue</span></div>
-        <div class="bar" style="--h:42%"><span>Wed</span></div>
-        <div class="bar" style="--h:88%"><span>Thu</span></div>
-        <div class="bar" style="--h:65%"><span>Fri</span></div>
-        <div class="bar" style="--h:50%"><span>Sat</span></div>
-        <div class="bar" style="--h:82%"><span>Sun</span></div>
+  <!-- ============ FEATURES ============ -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything a parent needs. <strong>Nothing extra.</strong></h2>
+      <p class="section-desc">Six core categories cover the first three years. Each one built with the same depth and care.</p>
+      <div class="features-grid">
+
+        <!-- Sleep -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-sleep">
+            <svg width="24" height="24" viewBox="0 0 17 17" fill="none"><path d="M15.82 8.73C15.74 10.17 15.25 11.57 14.4 12.74C13.54 13.91 12.37 14.81 11.02 15.33C9.66 15.85 8.19 15.96 6.77 15.66C5.35 15.36 4.05 14.65 3.03 13.63C2.01 12.6 1.3 11.3 1 9.89C0.7 8.47 0.81 6.99 1.33 5.64C1.85 4.29 2.75 3.11 3.92 2.26C5.09 1.41 6.48 0.91 7.93 0.83C8.27 0.82 8.44 1.22 8.26 1.5C7.66 2.46 7.41 3.6 7.54 4.72C7.66 5.84 8.17 6.89 8.97 7.69C9.77 8.49 10.81 8.99 11.94 9.12C13.06 9.25 14.19 8.99 15.15 8.39C15.44 8.21 15.84 8.39 15.82 8.73Z" stroke="#3C38FF" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Sleep tracking</h3>
+          <p>Start and stop timer, mark sleep quality and method. See how total sleep changes week to week.</p>
+        </div>
+
+        <!-- Feeding -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-feeding">
+            <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M2.5 1.67V7.5C2.5 8.42 3.25 9.17 4.17 9.17H7.5C7.94 9.17 8.37 8.99 8.68 8.68C8.99 8.37 9.17 7.94 9.17 7.5V1.67" stroke="#B51DF6" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.83 1.67V18.33" stroke="#B51DF6" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 12.5V1.67C16.39 1.67 15.33 2.11 14.55 2.89C13.77 3.67 13.33 4.73 13.33 5.83V10.83C13.33 11.75 14.08 12.5 15 12.5H17.5ZM17.5 12.5V18.33" stroke="#B51DF6" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Feeding log</h3>
+          <p>Breast with left/right timer, bottle with volume, complementary food. Track each session down to the minute.</p>
+        </div>
+
+        <!-- Diapers -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-diaper">
+            <svg width="24" height="20" viewBox="0 0 29 24" fill="none"><path d="M1 5.98C1 5.12 1 4.68 1.07 4.32C1.22 3.51 1.61 2.77 2.19 2.19C2.77 1.6 3.51 1.21 4.32 1.07C4.68 1 5.11 1 5.98 1H23.01C23.88 1 24.32 1 24.68 1.07C25.49 1.22 26.23 1.61 26.81 2.19C27.39 2.77 27.78 3.51 27.93 4.32C28 4.68 28 5.12 28 5.98V9.1C28 16.56 21.95 22.6 14.5 22.6C7.04 22.6 1 16.56 1 9.1V5.98Z" stroke="#ACBC36" stroke-width="2" stroke-linejoin="round"/><path d="M22.6 6.4H28M1 6.4H6.4M17.88 21.92V20.57C17.88 18.07 18.87 15.67 20.64 13.89C22.42 12.12 24.82 11.12 27.33 11.12M11.13 21.92V20.57C11.13 18.07 10.13 15.67 8.36 13.89C6.58 12.12 4.18 11.12 1.68 11.12" stroke="#ACBC36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Diaper changes</h3>
+          <p>One-tap logging. See daily counts and spot patterns your pediatrician will ask about.</p>
+        </div>
+
+        <!-- Health -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-health">
+            <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M8.75 17.08L17.08 8.75C17.47 8.37 17.78 7.91 17.99 7.41C18.21 6.91 18.32 6.37 18.32 5.82C18.32 5.28 18.22 4.74 18.01 4.23C17.8 3.73 17.5 3.27 17.11 2.89C16.73 2.5 16.27 2.2 15.76 1.99C15.26 1.78 14.72 1.68 14.18 1.68C13.63 1.68 13.09 1.79 12.59 2C12.09 2.22 11.63 2.53 11.25 2.92L2.92 11.25C2.53 11.63 2.22 12.09 2 12.59C1.79 13.09 1.68 13.63 1.68 14.18C1.68 14.72 1.78 15.26 1.99 15.76C2.2 16.27 2.5 16.73 2.89 17.11C3.27 17.5 3.73 17.8 4.23 18.01C4.74 18.22 5.28 18.32 5.82 18.32C6.37 18.32 6.91 18.21 7.41 17.99C7.91 17.78 8.37 17.47 8.75 17.08Z" stroke="#FFBE02" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.08 7.08L12.92 12.92" stroke="#FFBE02" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Health records</h3>
+          <p>Temperature, medications with reminders, vaccination notes. The data you need when the doctor asks.</p>
+        </div>
+
+        <!-- Growth -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-growth">
+            <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M17.75 12.75C17.94 12.94 18.08 13.16 18.19 13.4C18.29 13.64 18.34 13.9 18.34 14.17C18.34 14.43 18.29 14.69 18.19 14.93C18.08 15.18 17.94 15.4 17.75 15.58L15.58 17.75C15.4 17.94 15.18 18.08 14.93 18.19C14.69 18.29 14.43 18.34 14.17 18.34C13.9 18.34 13.64 18.29 13.4 18.19C13.16 18.08 12.94 17.94 12.75 17.75L2.25 7.25C1.88 6.87 1.67 6.36 1.67 5.83C1.67 5.3 1.88 4.79 2.25 4.42L4.42 2.25C4.79 1.88 5.3 1.67 5.83 1.67C6.36 1.67 6.87 1.88 7.25 2.25L17.75 12.75Z" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.08 10.42L13.75 8.75" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.58 7.92L11.25 6.25" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.08 5.42L8.75 3.75" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.58 12.92L16.25 11.25" stroke="#22E3CA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Growth charts</h3>
+          <p>Weight, height, and head circumference plotted over time. Track percentiles and see development trends.</p>
+        </div>
+
+        <!-- AI Advisor -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-ai">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9.587 5.368C10.191 3.599 12.635 3.546 13.351 5.207L13.412 5.369L14.228 7.754C14.414 8.301 14.717 8.801 15.113 9.222C15.51 9.642 15.992 9.972 16.528 10.191L16.747 10.272L19.132 11.087C20.901 11.691 20.954 14.135 19.294 14.851L19.132 14.912L16.747 15.728C16.2 15.914 15.699 16.216 15.279 16.613C14.858 17.01 14.528 17.492 14.309 18.028L14.228 18.246L13.413 20.632C12.809 22.401 10.365 22.454 9.649 20.794L9.587 20.632L8.772 18.247C8.585 17.7 8.283 17.199 7.887 16.779C7.49 16.358 7.008 16.028 6.472 15.809L6.254 15.728L3.869 14.913C2.099 14.309 2.046 11.865 3.707 11.15L3.869 11.087L6.254 10.272C6.801 10.085 7.301 9.783 7.722 9.387C8.142 8.99 8.472 8.507 8.69 7.972L8.772 7.754L9.587 5.368Z" fill="#3C38FF"/><path d="M18.862 2.456C19.064 1.866 19.878 1.849 20.117 2.402L20.137 2.456L20.409 3.251C20.472 3.434 20.572 3.6 20.704 3.741C20.837 3.881 20.998 3.991 21.176 4.063L21.249 4.091L22.044 4.362C22.634 4.564 22.651 5.378 22.098 5.617L22.044 5.637L21.249 5.909C21.067 5.971 20.9 6.072 20.76 6.204C20.619 6.337 20.509 6.497 20.437 6.676L20.409 6.749L20.138 7.544C19.936 8.134 19.122 8.151 18.883 7.598L18.862 7.544L18.591 6.749C18.529 6.567 18.428 6.4 18.296 6.26C18.163 6.119 18.003 6.009 17.824 5.936L17.751 5.909L16.956 5.638C16.366 5.436 16.349 4.622 16.902 4.383L16.956 4.362L17.751 4.091C17.934 4.028 18.1 3.928 18.241 3.796C18.381 3.663 18.491 3.502 18.564 3.324L18.591 3.251L18.862 2.456Z" fill="#3C38FF"/></svg>
+          </div>
+          <h3>AI advisor</h3>
+          <p>Ask questions based on your child's data. Get personalized recommendations, not generic articles.</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-stats">
+            <svg width="24" height="24" viewBox="0 0 18 18" fill="none"><path d="M9 0C13.97 0 18 4.03 18 9C18 13.97 13.97 18 9 18C4.03 18 0 13.97 0 9C0 4.03 4.03 0 9 0ZM5 9C4.45 9 4 9.45 4 10V13C4 13.55 4.45 14 5 14C5.55 14 6 13.55 6 13V10C6 9.45 5.55 9 5 9ZM9 4C8.45 4 8 4.45 8 5V13C8 13.55 8.45 14 9 14C9.55 14 10 13.55 10 13V5C10 4.45 9.55 4 9 4ZM13 7C12.45 7 12 7.45 12 8V13C12 13.55 12.45 14 13 14C13.55 14 14 13.55 14 13V8C14 7.45 13.55 7 13 7Z" fill="#3C38FF"/></svg>
+          </div>
+          <h3>Detailed statistics</h3>
+          <p>Charts for every category: sleep duration, feeding frequency, diaper counts. Export to CSV, Excel, or PDF.</p>
+        </div>
+
+        <!-- Sync -->
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-sync">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12V9a8 8 0 0 1 16 0v3" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round"/><path d="M20 12V15a8 8 0 0 1-16 0v-3" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round"/><path d="M8 12l-4 0M20 12l-4 0" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#27AE60"/></svg>
+          </div>
+          <h3>Real-time sync</h3>
+          <p>Both parents see updates instantly. Mom logs a feeding, dad sees it on his phone within seconds.</p>
+        </div>
+
       </div>
     </div>
-    <div class="feature-text rv rv-d2">
-      <h3>Discover your patterns</h3>
-      <p>See the rhythm of your sleep. Track recurring themes, emotions, and symbols across weeks and months. Understand what your dreams are telling you.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== FEATURE: LUCID ===== -->
-<section class="feature" id="f-lucid">
-  <div class="feature-inner">
-    <div class="feature-text rv">
-      <h3>Awaken within</h3>
-      <p>Learn to recognize when you're dreaming. Lummo guides you toward lucid dreaming with reality checks, proven techniques, and progress tracking.</p>
-    </div>
-    <div class="feature-vis rv rv-d2">
-      <div class="lucid-vis">
-        <div class="ring r1"></div>
-        <div class="ring r2"></div>
-        <div class="ring r3"></div>
-        <div class="ring r4"></div>
-        <div class="glow-c"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== QUOTE ===== -->
-<section id="quote">
-  <div class="quote-wrap rv">
-    <blockquote>Who looks outside, dreams; who looks inside, awakes.</blockquote>
-    <cite>Carl Jung</cite>
-  </div>
-</section>
-
-<!-- ===== DOWNLOAD ===== -->
-<section id="download">
-  <div class="dl-inner">
-    <div class="phone rv">
-      <div class="notch"></div>
-      <div class="phone-sc">
-        <div class="phone-hdr">Dream Journal</div>
-        <div class="phone-entry">
-          <div class="pe-date">Today, 7:23 AM</div>
-          <div class="ml"></div>
-          <div class="ml m"></div>
-          <div class="ml s"></div>
-          <span class="mt">flying</span>
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Set up in <strong>under a minute</strong></h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Add your child</h3>
+          <p>Name, date of birth, and a photo. That is all Lummo needs to start.</p>
         </div>
-        <div class="phone-entry">
-          <div class="pe-date">Yesterday</div>
-          <div class="ml"></div>
-          <div class="ml s"></div>
-          <span class="mt">ocean</span>
-          <span class="mt">vivid</span>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Log daily care</h3>
+          <p>Tap to log sleep, feeding, diapers, and health. Timers run in the background.</p>
         </div>
-        <div class="phone-entry">
-          <div class="pe-date">Jan 28</div>
-          <div class="ml m"></div>
-          <div class="ml"></div>
-          <div class="ml s"></div>
-          <span class="mt">lucid</span>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>See the patterns</h3>
+          <p>Charts build automatically. Share data with your partner or pediatrician.</p>
         </div>
       </div>
-      <div class="phone-fab"></div>
     </div>
-    <div class="dl-text rv rv-d1">
-      <h2>Begin your journey</h2>
-      <p>Lummo is coming to iOS and Android. A quiet companion for your nightly travels — always there when you wake.</p>
-      <div class="store-btns">
-        <a class="store-btn" href="#" aria-label="App Store — Coming Soon">
-          <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          <div class="store-info">
-            <span class="soon">Coming soon</span>
-            <span class="name">App Store</span>
+  </section>
+
+  <!-- ============ NUMBERS ============ -->
+  <section class="numbers">
+    <div class="container">
+      <div class="numbers-grid">
+        <div class="number-item">
+          <div class="number-value">30+</div>
+          <div class="number-label">Activity types tracked</div>
+        </div>
+        <div class="number-item">
+          <div class="number-value">6</div>
+          <div class="number-label">Core care categories</div>
+        </div>
+        <div class="number-item">
+          <div class="number-value">3</div>
+          <div class="number-label">Export formats: CSV, Excel, PDF</div>
+        </div>
+        <div class="number-item">
+          <div class="number-value">&lt;1s</div>
+          <div class="number-label">Sync between devices</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOWNLOAD ============ -->
+  <section class="download" id="download">
+    <div class="container">
+      <div class="section-label">Download</div>
+      <h2 class="section-title">Start tracking <strong>today</strong></h2>
+      <p class="section-desc">Free to download. Available on iOS and Android. Multi-child support included.</p>
+      <div class="download-ctas">
+        <a href="#" class="store-btn store-btn-apple" aria-label="Download on the App Store">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17.05 12.54c-.02-2.23 1.83-3.31 1.91-3.36-1.04-1.52-2.66-1.73-3.24-1.75-1.37-.14-2.7.82-3.4.82-.71 0-1.79-.8-2.95-.78-1.5.02-2.91.89-3.68 2.24-1.59 2.75-.41 6.8 1.12 9.03.76 1.08 1.65 2.3 2.82 2.26 1.14-.04 1.57-.73 2.95-.73 1.37 0 1.76.73 2.95.71 1.22-.02 1.99-1.09 2.73-2.18.88-1.25 1.23-2.47 1.25-2.53-.03-.01-2.39-.91-2.41-3.63h-.05zM14.83 5.54c.6-.75 1.01-1.78.9-2.82-.87.04-1.95.6-2.58 1.33-.56.65-1.06 1.71-.93 2.72.97.07 1.97-.5 2.56-1.23h.05z" fill="white"/></svg>
+          <div class="store-btn-text">
+            <small>Download on the</small>
+            <span>App Store</span>
           </div>
         </a>
-        <a class="store-btn" href="#" aria-label="Google Play — Coming Soon">
-          <svg viewBox="0 0 24 24"><path d="M3.61 1.81L13.79 12 3.61 22.19c-.38-.17-.61-.52-.61-.93V2.74c0-.41.23-.76.61-.93zm10.89 10.9l2.3 2.3-10.94 6.33 8.64-8.63zm3.2-3.2l2.3 2.3-2.3 2.3-2.73-2.3 2.73-2.3zM5.86 2.66L16.8 8.99l-2.3 2.3-8.64-8.63z"/></svg>
-          <div class="store-info">
-            <span class="soon">Coming soon</span>
-            <span class="name">Google Play</span>
+        <a href="#" class="store-btn store-btn-google" aria-label="Get it on Google Play">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3.61 1.81L13.39 12 3.61 22.19c-.25-.15-.41-.43-.41-.75V2.56c0-.32.16-.6.41-.75z" fill="#4285F4"/><path d="M16.69 8.71L5.15.56c-.36-.23-.76-.36-1.17-.36-.08 0-.16.01-.24.02L13.39 12l3.3-3.29z" fill="#EA4335"/><path d="M3.74 23.78c.08.01.16.02.24.02.41 0 .81-.13 1.17-.36l11.54-8.15-3.3-3.29-9.65 11.78z" fill="#34A853"/><path d="M20.15 10.37l-3.46-1.66-3.3 3.29 3.3 3.29 3.46-1.66c.64-.36 1.05-1.04 1.05-1.63s-.41-1.27-1.05-1.63z" fill="#FBBC05"/></svg>
+          <div class="store-btn-text">
+            <small>Get it on</small>
+            <span>Google Play</span>
           </div>
         </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== FOOTER ===== -->
-<footer>
-  <div class="f-links">
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms of Service</a>
-    <a href="mailto:support@lummo.app">Contact</a>
-  </div>
-  <p class="f-copy">&copy; 2025 Lummo. All rights reserved.</p>
-</footer>
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9.587 5.368C10.191 3.599 12.635 3.546 13.351 5.207L13.412 5.369L14.228 7.754C14.414 8.301 14.717 8.801 15.113 9.222C15.51 9.642 15.992 9.972 16.528 10.191L16.747 10.272L19.132 11.087C20.901 11.691 20.954 14.135 19.294 14.851L19.132 14.912L16.747 15.728C16.2 15.914 15.699 16.216 15.279 16.613C14.858 17.01 14.528 17.492 14.309 18.028L14.228 18.246L13.413 20.632C12.809 22.401 10.365 22.454 9.649 20.794L9.587 20.632L8.772 18.247C8.585 17.7 8.283 17.199 7.887 16.779C7.49 16.358 7.008 16.028 6.472 15.809L6.254 15.728L3.869 14.913C2.099 14.309 2.046 11.865 3.707 11.15L3.869 11.087L6.254 10.272C6.801 10.085 7.301 9.783 7.722 9.387C8.142 8.99 8.472 8.507 8.69 7.972L8.772 7.754L9.587 5.368Z" fill="#3D38FF"/><path d="M18.862 2.456C19.064 1.866 19.878 1.849 20.117 2.402L20.137 2.456L20.409 3.251C20.472 3.434 20.572 3.6 20.704 3.741C20.837 3.881 20.998 3.991 21.176 4.063L21.249 4.091L22.044 4.362C22.634 4.564 22.651 5.378 22.098 5.617L22.044 5.637L21.249 5.909C21.067 5.971 20.9 6.072 20.76 6.204C20.619 6.337 20.509 6.497 20.437 6.676L20.409 6.749L20.138 7.544C19.936 8.134 19.122 8.151 18.883 7.598L18.862 7.544L18.591 6.749C18.529 6.567 18.428 6.4 18.296 6.26C18.163 6.119 18.003 6.009 17.824 5.936L17.751 5.909L16.956 5.638C16.366 5.436 16.349 4.622 16.902 4.383L16.956 4.362L17.751 4.091C17.934 4.028 18.1 3.928 18.241 3.796C18.381 3.663 18.491 3.502 18.564 3.324L18.591 3.251L18.862 2.456Z" fill="#3D38FF"/></svg>
+        Lummo
+      </div>
+      <ul class="footer-links">
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Terms of Service</a></li>
+        <li><a href="mailto:support@lummo.app">Contact</a></li>
+      </ul>
+      <div class="footer-copy">&copy; 2025 Lummo. All rights reserved.</div>
+    </div>
+  </footer>
 
-<script>
-/* Stars */
-(function(){
-  var c=document.getElementById('stars');
-  for(var i=0;i<70;i++){
-    var s=document.createElement('div');
-    s.className='star';
-    var sz=Math.random()<.92?(Math.random()*1.2+.4):(Math.random()*1+1.8);
-    s.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+sz+'px;height:'+sz+'px;--dur:'+(Math.random()*5+4)+'s;--del:'+(Math.random()*8)+'s';
-    if(sz>1.8)s.classList.add('bright');
-    c.appendChild(s);
-  }
-})();
-
-/* Chart bars animate in */
-(function(){
-  var bars=document.querySelectorAll('.bar');
-  bars.forEach(function(b){b.style.height='0'});
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        bars.forEach(function(b){b.style.height=b.style.getPropertyValue('--h')});
-        obs.unobserve(e.target);
-      }
+  <!-- ============ JS ============ -->
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 10);
     });
-  },{threshold:.3});
-  if(bars[0])obs.observe(bars[0].parentElement);
-})();
 
-/* Reveal on scroll */
-(function(){
-  var els=document.querySelectorAll('.rv');
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}
+    // Mobile nav toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    mobileToggle.addEventListener('click', () => {
+      mobileNav.classList.toggle('active');
     });
-  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
-  els.forEach(function(el){obs.observe(el)});
-})();
+    function closeMobileNav() {
+      mobileNav.classList.remove('active');
+    }
 
-/* Nav on scroll */
-(function(){
-  var nav=document.querySelector('nav');
-  var hero=document.getElementById('hero');
-  var ticking=false;
-  window.addEventListener('scroll',function(){
-    if(!ticking){requestAnimationFrame(function(){
-      nav.classList.toggle('visible',window.scrollY>hero.offsetHeight*.55);
-      ticking=false;
-    });ticking=true}
-  });
-})();
+    // Scroll animations
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, i * 80);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
 
-/* Parallax on moon */
-(function(){
-  var mw=document.querySelector('.moon-wrap');
-  var ticking=false;
-  window.addEventListener('scroll',function(){
-    if(!ticking){requestAnimationFrame(function(){
-      var s=window.scrollY;
-      if(s<window.innerHeight){
-        mw.style.transform='translateY('+s*.25+'px)';
-        mw.style.opacity=1-s/(window.innerHeight*.8);
-      }
-      ticking=false;
-    });ticking=true}
-  });
-})();
-</script>
+      document.querySelectorAll('.feature-card, .step, .number-item').forEach(el => {
+        observer.observe(el);
+      });
+    }
+  </script>
 </body>
 </html>
