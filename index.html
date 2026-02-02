@@ -871,20 +871,18 @@
 
     /* ===================== ANIMATIONS ===================== */
     @media (prefers-reduced-motion: no-preference) {
-      .feature-card, .step, .number-item {
+      .animate-ready .feature-card,
+      .animate-ready .step,
+      .animate-ready .number-item {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.5s ease, transform 0.5s ease;
       }
-      .feature-card.visible, .step.visible, .number-item.visible {
+      .animate-ready .feature-card.visible,
+      .animate-ready .step.visible,
+      .animate-ready .number-item.visible {
         opacity: 1;
         transform: translateY(0);
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .feature-card, .step, .number-item {
-        opacity: 1;
-        transform: none;
       }
     }
   </style>
@@ -1241,18 +1239,20 @@
       mobileNav.classList.remove('active');
     }
 
-    // Scroll animations
+    // Scroll animations - add class only when JS is ready
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.body.classList.add('animate-ready');
       const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, i) => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setTimeout(() => {
-              entry.target.classList.add('visible');
-            }, i * 80);
+            const siblings = entry.target.parentElement.querySelectorAll('.feature-card, .step, .number-item');
+            siblings.forEach((el, i) => {
+              setTimeout(() => el.classList.add('visible'), i * 80);
+            });
             observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.1 });
+      }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
 
       document.querySelectorAll('.feature-card, .step, .number-item').forEach(el => {
         observer.observe(el);
