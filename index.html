@@ -28,36 +28,55 @@
 @font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-DemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Articulat CF'; src: url('fonts/ArticulatCF-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
 </style>
-<!-- Display serif for headings -->
+<!-- Display serif for headings — non-render-blocking -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=optional">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=optional" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=optional" rel="stylesheet"></noscript>
 
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#3C38FF',
-        'primary-dark': '#1D2475',
-        accent: '#F4433D',
-        surface: '#F5F5F5',
-        'text-secondary': '#A3A5AA',
-      },
-      fontFamily: {
-        'articulat': ['"Articulat CF"', 'system-ui', 'sans-serif'],
-        'display': ['"Cormorant Garamond"', 'serif'],
-      }
-    }
-  }
-}
-</script>
+<!-- Tailwind utility replacements (no CDN needed) -->
 <style>
 /* Tailwind scrollbar-hide utility */
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* ==========================================================================
+   TAILWIND UTILITY REPLACEMENTS
+   ========================================================================== */
+.font-articulat { font-family: 'Articulat CF', system-ui, sans-serif; }
+.font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+.font-light { font-weight: 300; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.uppercase { text-transform: uppercase; }
+.tracking-wider { letter-spacing: 0.05em; }
+.tracking-widest { letter-spacing: 0.1em; }
+.tracking-wide { letter-spacing: 0.025em; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-2\.5 { margin-top: 0.625rem; }
+.mb-3\.5 { margin-bottom: 0.875rem; }
+.leading-relaxed { line-height: 1.625; }
+.text-center { text-align: center; }
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.relative { position: relative; }
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-5 { gap: 1.25rem; }
+.justify-center { justify-content: center; }
+.py-11 { padding-top: 2.75rem; padding-bottom: 2.75rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.z-\[1\] { z-index: 1; }
+.border-t { border-top-width: 1px; border-top-style: solid; }
+.border-white\/\[\.03\] { border-color: rgba(255,255,255,0.03); }
+.text-white\/25 { color: rgba(255,255,255,0.25); }
+.text-white\/10 { color: rgba(255,255,255,0.1); }
+.text-\[\.68rem\] { font-size: 0.68rem; }
+.text-text-secondary { color: #A3A5AA; }
+.transition-colors { transition-property: color, background-color, border-color; transition-duration: 150ms; transition-timing-function: ease; }
+.hover\:text-white:hover { color: #fff; }
+.hover\:text-white\/40:hover { color: rgba(255,255,255,0.4); }
 /* ==========================================================================
    RESET & CUSTOM PROPERTIES
    ========================================================================== */
@@ -636,6 +655,46 @@ footer {
   .hero-pills { gap:6px; }
   .pill { padding:4px 10px; font-size:.7rem; }
 }
+
+/* ==========================================================================
+   MOBILE PERFORMANCE OPTIMIZATIONS (≤768px)
+   ========================================================================== */
+@media(max-width:768px){
+  /* Disable moon float animation */
+  .moon { animation: none; }
+
+  /* Simplify phone-mockup box-shadow */
+  .phone-mockup {
+    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  }
+
+  /* Disable star twinkle animations — static dim dots */
+  .star--s, .star--m {
+    animation: none !important;
+    opacity: .15;
+  }
+  .star--m { box-shadow: none; }
+
+  /* Disable cloud drift animations */
+  .cloud { animation: none; display: none; }
+
+  /* Reduce backdrop-filter cost on nav */
+  nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+  /* Simplify moon glow */
+  .moon {
+    box-shadow: 0 0 40px 10px rgba(250,244,224,.12);
+  }
+
+  /* Disable scroll-hint bob animation */
+  .scroll-hint { animation: none; }
+
+  /* Remove hover transforms on cards (no hover on touch) */
+  .f-card:hover, .free-col:hover, .store-btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -908,13 +967,13 @@ footer {
 
 <script>
 /* ==========================================================================
-   STARS — 2 layers, reduced count (~110 total)
+   STARS — mobile: ~20 static, desktop: ~110 animated
    ========================================================================== */
 (function(){
-  var L=[
-    {id:'sl1',n:70,lo:.3,hi:1.2,cls:'star--s'},
-    {id:'sl2',n:40,lo:.8,hi:2,  cls:'star--m'}
-  ];
+  var isMobile = window.matchMedia('(max-width:768px)').matches;
+  var L = isMobile
+    ? [{id:'sl1',n:14,lo:.4,hi:1,cls:'star--s'},{id:'sl2',n:6,lo:.8,hi:1.5,cls:'star--m'}]
+    : [{id:'sl1',n:70,lo:.3,hi:1.2,cls:'star--s'},{id:'sl2',n:40,lo:.8,hi:2,cls:'star--m'}];
   L.forEach(function(l){
     var el=document.getElementById(l.id); if(!el)return;
     var f=document.createDocumentFragment();
@@ -935,9 +994,11 @@ footer {
 })();
 
 /* ==========================================================================
-   GSAP + ScrollTrigger — simplified: opacity fades only
+   GSAP + ScrollTrigger — mobile-optimised
    ========================================================================== */
 gsap.registerPlugin(ScrollTrigger);
+
+var isMobile = window.matchMedia('(max-width:768px)').matches;
 
 /* --- Reveal all .anim elements (prevents FOUC fallback) --- */
 gsap.set('.anim',{opacity:1});
@@ -945,36 +1006,38 @@ gsap.set('.anim',{opacity:1});
 /* --- HERO entrance timeline — simple fades --- */
 var hero=gsap.timeline({defaults:{ease:'power2.out'}});
 hero
-  .from('#heroMoon',{opacity:0, duration:1.2})
-  .from('.hero-title',{opacity:0, duration:0.8},'-=.5')
-  .from('.hero-sub',{opacity:0, duration:0.7},'-=.4')
-  .from('.hero-pills',{opacity:0, duration:0.6},'-=.3')
-  .from('.hero-phone-area',{opacity:0, duration:1},'-=.4')
+  .from('#heroMoon',{opacity:0, duration: isMobile ? 0.6 : 1.2})
+  .from('.hero-title',{opacity:0, duration: isMobile ? 0.5 : 0.8}, isMobile ? '-=.3' : '-=.5')
+  .from('.hero-sub',{opacity:0, duration: isMobile ? 0.4 : 0.7}, isMobile ? '-=.2' : '-=.4')
+  .from('.hero-pills',{opacity:0, duration: isMobile ? 0.3 : 0.6}, isMobile ? '-=.15' : '-=.3')
+  .from('.hero-phone-area',{opacity:0, duration: isMobile ? 0.5 : 1}, isMobile ? '-=.2' : '-=.4')
   .from('.scroll-hint',{opacity:0, duration:.4},'-=.2');
 
-/* --- Moon parallax on scroll (key visual, keep) --- */
-gsap.to('#heroMoon',{
-  y:-140, opacity:.2,
-  scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}
-});
-/* Hero phone subtle lift */
-gsap.to('.hero-phone-area',{
-  y:-50,
-  scrollTrigger:{trigger:'#hero',start:'50% top',end:'bottom top',scrub:1}
-});
+if (!isMobile) {
+  /* --- Moon parallax on scroll (desktop only) --- */
+  gsap.to('#heroMoon',{
+    y:-140, opacity:.2,
+    scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}
+  });
+  /* Hero phone subtle lift (desktop only) */
+  gsap.to('.hero-phone-area',{
+    y:-50,
+    scrollTrigger:{trigger:'#hero',start:'50% top',end:'bottom top',scrub:1}
+  });
 
-/* --- Star layer parallax (2 layers) --- */
-gsap.to('#sl1',{y:'-6%',  scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2.5}});
-gsap.to('#sl2',{y:'-16%', scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:1.8}});
+  /* --- Star layer parallax (desktop only) --- */
+  gsap.to('#sl1',{y:'-6%',  scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2.5}});
+  gsap.to('#sl2',{y:'-16%', scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:1.8}});
+}
 
 /* --- Section reveal helper — simple opacity fade --- */
 function revealFade(trigger, els, stagger){
   stagger = stagger || 0;
   els.forEach(function(sel,i){
     gsap.from(sel,{
-      opacity:0, duration:0.8, delay:stagger*i,
+      opacity:0, duration: isMobile ? 0.5 : 0.8, delay:stagger*i,
       ease:'power2.out',
-      scrollTrigger:{trigger:trigger,start:'top 65%',toggleActions:'play none none reverse'}
+      scrollTrigger:{trigger:trigger,start:'top 75%',toggleActions:'play none none none'}
     });
   });
 }
@@ -987,40 +1050,40 @@ document.querySelectorAll('.sc-split').forEach(function(sp){
   var sec = sp.closest('.sc');
   sp.querySelectorAll('.anim').forEach(function(el,i){
     gsap.from(el,{
-      opacity:0, duration:0.8, delay:i*.1, ease:'power2.out',
-      scrollTrigger:{trigger:sec,start:'top 60%',toggleActions:'play none none reverse'}
+      opacity:0, duration: isMobile ? 0.5 : 0.8, delay:i*.1, ease:'power2.out',
+      scrollTrigger:{trigger:sec,start:'top 70%',toggleActions:'play none none none'}
     });
   });
 });
 
 /* Features grid */
 gsap.from('#features .sc-center .anim',{
-  opacity:0, duration:.7, stagger:.08, ease:'power2.out',
-  scrollTrigger:{trigger:'#features',start:'top 65%',toggleActions:'play none none reverse'}
+  opacity:0, duration: isMobile ? 0.4 : .7, stagger:.08, ease:'power2.out',
+  scrollTrigger:{trigger:'#features',start:'top 75%',toggleActions:'play none none none'}
 });
 gsap.from('.f-card',{
-  opacity:0, duration:.5, stagger:.05, ease:'power2.out',
-  scrollTrigger:{trigger:'.f-grid',start:'top 70%',toggleActions:'play none none reverse'}
+  opacity:0, duration: isMobile ? 0.3 : .5, stagger:.05, ease:'power2.out',
+  scrollTrigger:{trigger:'.f-grid',start:'top 80%',toggleActions:'play none none none'}
 });
 
 /* Free pillars */
 gsap.from('#free .sc-center .anim',{
-  opacity:0, duration:.7, ease:'power2.out',
-  scrollTrigger:{trigger:'#free',start:'top 65%',toggleActions:'play none none reverse'}
+  opacity:0, duration: isMobile ? 0.4 : .7, ease:'power2.out',
+  scrollTrigger:{trigger:'#free',start:'top 75%',toggleActions:'play none none none'}
 });
 gsap.from('.free-col',{
-  opacity:0, duration:.6, stagger:.08, ease:'power2.out',
-  scrollTrigger:{trigger:'.free-cols',start:'top 70%',toggleActions:'play none none reverse'}
+  opacity:0, duration: isMobile ? 0.4 : .6, stagger:.08, ease:'power2.out',
+  scrollTrigger:{trigger:'.free-cols',start:'top 80%',toggleActions:'play none none none'}
 });
 
 /* Download */
 gsap.from('#download .phone-mockup',{
-  opacity:0, duration:1, ease:'power2.out',
-  scrollTrigger:{trigger:'#download',start:'top 60%',toggleActions:'play none none reverse'}
+  opacity:0, duration: isMobile ? 0.5 : 1, ease:'power2.out',
+  scrollTrigger:{trigger:'#download',start:'top 70%',toggleActions:'play none none none'}
 });
 gsap.from('#download .dl-text .anim',{
-  opacity:0, duration:.8, stagger:.08, ease:'power2.out',
-  scrollTrigger:{trigger:'#download',start:'top 60%',toggleActions:'play none none reverse'}
+  opacity:0, duration: isMobile ? 0.5 : .8, stagger:.08, ease:'power2.out',
+  scrollTrigger:{trigger:'#download',start:'top 70%',toggleActions:'play none none none'}
 });
 
 /* ==========================================================================
