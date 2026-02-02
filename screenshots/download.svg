@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <rect fill="#121212" width="390" height="844" rx="20"/>
+  <circle cx="195" cy="310" r="45" fill="#faf4e0" opacity=".08"/>
+  <circle cx="207" cy="300" r="12" fill="#faf4e0" opacity=".05"/>
+  <text x="195" y="400" text-anchor="middle" fill="#3C38FF" font-size="24" font-family="system-ui" font-weight="300">Lummo App</text>
+  <text x="195" y="440" text-anchor="middle" fill="#666" font-size="14" font-family="system-ui">Replace with screenshot</text>
+  <text x="195" y="480" text-anchor="middle" fill="#444" font-size="12" font-family="system-ui">390 × 844</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <rect fill="#121212" width="390" height="844" rx="20"/>
+  <circle cx="195" cy="310" r="35" fill="none" stroke="#B51DF6" stroke-width="2" opacity=".5"/>
+  <circle cx="195" cy="310" r="20" fill="#B51DF6" opacity=".15"/>
+  <text x="195" y="400" text-anchor="middle" fill="#B51DF6" font-size="24" font-family="system-ui" font-weight="300">Feeding Timer</text>
+  <text x="195" y="440" text-anchor="middle" fill="#666" font-size="14" font-family="system-ui">Replace with screenshot</text>
+  <text x="195" y="480" text-anchor="middle" fill="#444" font-size="12" font-family="system-ui">390 × 844</text>
+</svg>

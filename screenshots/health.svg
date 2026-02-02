@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <rect fill="#121212" width="390" height="844" rx="20"/>
+  <rect x="120" y="280" width="150" height="80" rx="8" fill="none" stroke="#FFBE02" stroke-width="1.5" opacity=".4"/>
+  <polyline points="130,340 160,320 190,330 220,300 250,310" fill="none" stroke="#FFBE02" stroke-width="2" opacity=".6"/>
+  <text x="195" y="410" text-anchor="middle" fill="#FFBE02" font-size="24" font-family="system-ui" font-weight="300">Health &amp; Growth</text>
+  <text x="195" y="450" text-anchor="middle" fill="#666" font-size="14" font-family="system-ui">Replace with screenshot</text>
+  <text x="195" y="490" text-anchor="middle" fill="#444" font-size="12" font-family="system-ui">390 × 844</text>
+</svg>
